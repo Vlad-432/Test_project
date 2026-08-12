@@ -7,10 +7,7 @@
 <title>CryptoScreen Hybrid</title>
 
 <style>
-
-*{
-    box-sizing:border-box
-}
+*{box-sizing:border-box}
 
 html,body{
     margin:0;
@@ -22,9 +19,7 @@ html,body{
     font-family:Arial,Helvetica,sans-serif;
 }
 
-button,input{
-    font:inherit
-}
+button,input{font:inherit}
 
 header{
     height:58px;
@@ -50,18 +45,12 @@ header{
     font-weight:900;
 }
 
-.logo span{
-    color:#00d68f;
-}
+.logo span{color:#00d68f}
 
 .header-right{
     display:flex;
     align-items:center;
     gap:8px;
-}
-
-#signalsNav{
-    transform:translateY(3px);
 }
 
 .connection{
@@ -97,16 +86,9 @@ header{
     display:none;
 }
 
-.page.active{
-    display:block;
-}
+.page.active{display:block}
 
-
-/* MAIN */
-
-.main-page{
-    padding:12px;
-}
+.main-page{padding:12px}
 
 .main-title{
     height:42px;
@@ -139,7 +121,7 @@ header{
     background:#10141b;
     border:1px solid #232a35;
     border-radius:14px;
-    overflow:auto;
+    overflow:hidden;
     display:flex;
     flex-direction:column;
 }
@@ -253,9 +235,7 @@ header{
     font-size:11px;
 }
 
-.pair-input:focus{
-    border-color:#00d68f;
-}
+.pair-input:focus{border-color:#00d68f}
 
 .apply-btn{
     border:0;
@@ -311,17 +291,9 @@ header{
     font-weight:900;
 }
 
-.signal-buy{
-    color:#00d68f
-}
-
-.signal-sell{
-    color:#ff536d
-}
-
-.signal-wait{
-    color:#ffb020
-}
+.signal-buy{color:#00d68f}
+.signal-sell{color:#ff536d}
+.signal-wait{color:#ffb020}
 
 .signal-info{
     color:#8993a5;
@@ -344,17 +316,9 @@ header{
     font-size:7px;
 }
 
-.factor.good{
-    color:#00d68f
-}
-
-.factor.bad{
-    color:#ff536d
-}
-
-.factor.neutral{
-    color:#ffb020
-}
+.factor.good{color:#00d68f}
+.factor.bad{color:#ff536d}
+.factor.neutral{color:#ffb020}
 
 .error{
     color:#ff536d;
@@ -362,27 +326,13 @@ header{
     margin-top:4px;
 }
 
-
-/* ИСПРАВЛЕННЫЙ ГРАФИК */
-
 .chart{
-    flex:0 0 260px;
-    height:260px;
-    min-height:260px;
+    flex:1;
+    min-height:0;
     width:100%;
     border-top:1px solid #232a35;
     background:#0b0e13;
-    position:relative;
 }
-
-.chart > div{
-    width:100% !important;
-    height:100% !important;
-    min-height:260px !important;
-}
-
-
-/* SIGNALS PAGE */
 
 .signals-page{
     padding:10px;
@@ -422,9 +372,7 @@ header{
     margin-bottom:8px;
 }
 
-.monitor-bar::-webkit-scrollbar{
-    display:none;
-}
+.monitor-bar::-webkit-scrollbar{display:none}
 
 .monitor-chip{
     flex:0 0 auto;
@@ -502,17 +450,9 @@ header{
     font-weight:900;
 }
 
-.signal-direction.buy{
-    color:#00d68f
-}
-
-.signal-direction.sell{
-    color:#ff536d
-}
-
-.signal-direction.flat{
-    color:#ffb020
-}
+.signal-direction.buy{color:#00d68f}
+.signal-direction.sell{color:#ff536d}
+.signal-direction.flat{color:#ffb020}
 
 .signal-price{
     margin-top:5px;
@@ -549,17 +489,9 @@ header{
     font-weight:900;
 }
 
-.result.win{
-    color:#00d68f
-}
-
-.result.loss{
-    color:#ff536d
-}
-
-.result.flat{
-    color:#ffb020
-}
+.result.win{color:#00d68f}
+.result.loss{color:#ff536d}
+.result.flat{color:#ffb020}
 
 .stats-line{
     margin-top:7px;
@@ -580,9 +512,6 @@ header{
     font-size:9px;
 }
 
-
-/* MODAL */
-
 .modal{
     position:fixed;
     inset:0;
@@ -594,9 +523,7 @@ header{
     padding:15px;
 }
 
-.modal.open{
-    display:flex;
-}
+.modal.open{display:flex}
 
 .modal-box{
     width:min(390px,100%);
@@ -666,9 +593,7 @@ header{
     font-weight:900;
 }
 
-
 @media(max-width:700px){
-
     .cards-grid{
         grid-template-columns:1fr;
     }
@@ -684,323 +609,244 @@ header{
     .price{
         font-size:20px;
     }
-
-    .chart{
-        flex-basis:260px;
-        height:260px;
-        min-height:260px;
-    }
-
 }
-
 </style>
 </head>
 
 <body>
 
 <header>
+<div class="header-inner">
 
-    <div class="header-inner">
+<div class="logo">
+Crypto<span>Screen</span>
+</div>
 
-        <div class="logo">
-            Crypto<span>Screen</span>
-        </div>
+<div class="header-right">
 
-        <div class="header-right">
+<div class="connection" id="connection">
+● Подключение...
+</div>
 
-            <div class="connection" id="connection">
-                ● Подключение...
-            </div>
+<button class="nav-btn active"
+id="mainNav"
+onclick="showPage('main')">
+Графики
+</button>
 
-            <button
-                class="nav-btn active"
-                id="mainNav"
-                onclick="showPage('main')">
-                Графики
-            </button>
+<button class="nav-btn"
+id="signalsNav"
+onclick="showPage('signals')">
+Сигналы
+</button>
 
-            <button
-                class="nav-btn"
-                id="signalsNav"
-                onclick="showPage('signals')">
-                Сигналы
-            </button>
-
-        </div>
-
-    </div>
-
+</div>
+</div>
 </header>
-
 
 <div class="app">
 
+<section class="page active" id="mainPage">
 
-<!-- =========================================================
-     MAIN
-========================================================= -->
+<div class="main-page">
 
-<section
-    class="page active"
-    id="mainPage">
+<div class="main-title">
 
-    <div class="main-page">
+<div>
+<h1>Крипто-скринер</h1>
+<p>Crypto + Forex • графики • анализ • сигналы</p>
+</div>
 
-        <div class="main-title">
+</div>
 
-            <div>
+<div class="cards-grid" id="grid"></div>
 
-                <h1>
-                    Крипто-скринер
-                </h1>
-
-                <p>
-                    Crypto + Forex • графики • анализ • сигналы
-                </p>
-
-            </div>
-
-        </div>
-
-
-        <div
-            class="cards-grid"
-            id="grid">
-        </div>
-
-    </div>
+</div>
 
 </section>
 
 
-<!-- =========================================================
-     SIGNALS
-========================================================= -->
+<section class="page" id="signalsPage">
 
-<section
-    class="page"
-    id="signalsPage">
+<div class="signals-page">
 
-    <div class="signals-page">
+<div class="signals-head">
 
-        <div class="signals-head">
+<div class="signals-title">
+📊 Сигналы
+</div>
 
-            <div class="signals-title">
-                📊 Сигналы
-            </div>
+<button class="add-monitor"
+onclick="openMonitorModal()">
+＋ ДОБАВИТЬ
+</button>
 
-            <button
-                class="add-monitor"
-                onclick="openMonitorModal()">
+</div>
 
-                ＋ ДОБАВИТЬ
+<div class="monitor-bar" id="monitorBar"></div>
 
-            </button>
+<div class="stats-line">
 
-        </div>
+<span id="statsOpen">Открыто: 0</span>
+<span id="statsWin">✅ 0</span>
+<span id="statsLoss">❌ 0</span>
+<span id="statsFlat">⚪ 0</span>
+<span id="statsWinrate">Win Rate: 0%</span>
 
+</div>
 
-        <div
-            class="monitor-bar"
-            id="monitorBar">
-        </div>
+<div class="signals-columns">
 
+<div class="signal-column">
 
-        <div class="stats-line">
+<div class="column-head">
+🟢 ОТКРЫТЫЕ
+</div>
 
-            <span id="statsOpen">
-                Открыто: 0
-            </span>
+<div class="signal-list"
+id="openSignals">
+</div>
 
-            <span id="statsWin">
-                ✅ 0
-            </span>
-
-            <span id="statsLoss">
-                ❌ 0
-            </span>
-
-            <span id="statsFlat">
-                ⚪ 0
-            </span>
-
-            <span id="statsWinrate">
-                Win Rate: 0%
-            </span>
-
-        </div>
+</div>
 
 
-        <div class="signals-columns">
+<div class="signal-column">
 
+<div class="column-head">
+📁 ЗАВЕРШЁННЫЕ
+</div>
 
-            <div class="signal-column">
+<div class="signal-list"
+id="closedSignals">
+</div>
 
-                <div class="column-head">
-                    🟢 ОТКРЫТЫЕ
-                </div>
+</div>
 
-                <div
-                    class="signal-list"
-                    id="openSignals">
-                </div>
+</div>
 
-            </div>
-
-
-            <div class="signal-column">
-
-                <div class="column-head">
-                    📁 ЗАВЕРШЁННЫЕ
-                </div>
-
-                <div
-                    class="signal-list"
-                    id="closedSignals">
-                </div>
-
-            </div>
-
-
-        </div>
-
-    </div>
+</div>
 
 </section>
 
 </div>
 
 
-<!-- =========================================================
-     MODAL
-========================================================= -->
+<div class="modal" id="monitorModal">
 
-<div
-    class="modal"
-    id="monitorModal">
+<div class="modal-box">
 
-    <div class="modal-box">
+<div class="modal-title">
+Добавить пару в мониторинг
+</div>
 
-        <div class="modal-title">
-            Добавить пару в мониторинг
-        </div>
+<input
+class="modal-input"
+id="monitorInput"
+placeholder="BTCUSDT / AUDCAD / EURUSD"
+>
 
+<div class="tf-select" id="tfSelect">
 
-        <input
-            class="modal-input"
-            id="monitorInput"
-            placeholder="BTCUSDT / AUDCAD / EURUSD"
-        >
+<button class="tf-option"
+data-tf="1">1м</button>
 
+<button class="tf-option"
+data-tf="5">5м</button>
 
-        <div
-            class="tf-select"
-            id="tfSelect">
+<button class="tf-option active"
+data-tf="15">15м</button>
 
-            <button
-                class="tf-option"
-                data-tf="1">
-                1м
-            </button>
+<button class="tf-option"
+data-tf="30">30м</button>
 
-            <button
-                class="tf-option"
-                data-tf="5">
-                5м
-            </button>
+<button class="tf-option"
+data-tf="60">1ч</button>
 
-            <button
-                class="tf-option active"
-                data-tf="15">
-                15м
-            </button>
+<button class="tf-option"
+data-tf="240">4ч</button>
 
-            <button
-                class="tf-option"
-                data-tf="30">
-                30м
-            </button>
+<button class="tf-option"
+data-tf="D">1д</button>
 
-            <button
-                class="tf-option"
-                data-tf="60">
-                1ч
-            </button>
+</div>
 
-            <button
-                class="tf-option"
-                data-tf="240">
-                4ч
-            </button>
+<div class="modal-actions">
 
-            <button
-                class="tf-option"
-                data-tf="D">
-                1д
-            </button>
+<button onclick="closeMonitorModal()">
+Отмена
+</button>
 
-        </div>
+<button class="save"
+onclick="addMonitor()">
+Добавить
+</button>
 
+</div>
 
-        <div class="modal-actions">
-
-            <button onclick="closeMonitorModal()">
-                Отмена
-            </button>
-
-            <button
-                class="save"
-                onclick="addMonitor()">
-                Добавить
-            </button>
-
-        </div>
-
-    </div>
+</div>
 
 </div>
 
 
 <script>
 
-
 /* =========================================================
-   TWELVE DATA
+   API
 ========================================================= */
 
 const TWELVE_DATA_API_KEY =
-    "c9ebc697be6f4040a031816d158751d4";
+"c9ebc697be6f4040a031816d158751d4";
 
 
 /* =========================================================
-   ОСНОВНЫЕ НАСТРОЙКИ
+   НАСТРОЙКИ АНАЛИЗА
+========================================================= */
+
+const ANALYSIS_CANDLES = 250;
+
+/*
+   Сигнал теперь появляется только если
+   оценка >= 75 для BUY
+   или <= 25 для SELL.
+*/
+
+const MIN_SIGNAL_SCORE = 75;
+
+/*
+   Минимальная пауза между одинаковыми
+   сигналами для одной пары + ТФ.
+*/
+
+const SIGNAL_COOLDOWN = 10 * 60 * 1000;
+
+
+/*
+   Минимальный интервал проверки.
+   5 секунд вместо старых 15.
+*/
+
+const MONITOR_INTERVAL = 5000;
+
+
+/* =========================================================
+   DEFAULT CARDS
 ========================================================= */
 
 const defaultCoins =
-    JSON.parse(
-        localStorage.getItem(
-            "cryptoScreenCards"
-        )
-    ) || [
-        "BTCUSDT",
-        "ETHUSDT"
-    ];
+JSON.parse(
+localStorage.getItem("cryptoScreenCards")
+) || [
+"BTCUSDT"
+];
 
 
 const grid =
-    document.getElementById(
-        "grid"
-    );
-
+document.getElementById("grid");
 
 const connection =
-    document.getElementById(
-        "connection"
-    );
-
+document.getElementById("connection");
 
 const cards = {};
-
 
 let socket = null;
 
@@ -1011,39 +857,22 @@ let socket = null;
 
 const forexPairs = new Set([
 
-    "EURUSD",
-    "GBPUSD",
-    "USDJPY",
-    "USDCHF",
-    "USDCAD",
-    "AUDUSD",
-    "NZDUSD",
+"EURUSD","GBPUSD","USDJPY",
+"USDCHF","USDCAD","AUDUSD",
+"NZDUSD",
 
-    "EURGBP",
-    "EURJPY",
-    "EURCHF",
-    "EURAUD",
-    "EURCAD",
-    "EURNZD",
+"EURGBP","EURJPY","EURCHF",
+"EURAUD","EURCAD","EURNZD",
 
-    "GBPJPY",
-    "GBPCHF",
-    "GBPAUD",
-    "GBPCAD",
-    "GBPNZD",
+"GBPJPY","GBPCHF","GBPAUD",
+"GBPCAD","GBPNZD",
 
-    "AUDJPY",
-    "AUDCAD",
-    "AUDNZD",
-    "AUDCHF",
+"AUDJPY","AUDCAD","AUDNZD",
+"AUDCHF",
 
-    "NZDJPY",
-    "NZDCAD",
-    "NZDCHF",
+"NZDJPY","NZDCAD","NZDCHF",
 
-    "CADJPY",
-    "CADCHF",
-    "CHFJPY"
+"CADJPY","CADCHF","CHFJPY"
 
 ]);
 
@@ -1054,47 +883,47 @@ const forexPairs = new Set([
 
 function normalizeInput(value){
 
-    return value
-        .trim()
-        .toUpperCase()
-        .replace(/\s+/g,"")
-        .replace("/","");
+return value
+.trim()
+.toUpperCase()
+.replace(/\s+/g,"")
+.replace("/","");
 
 }
 
 
 function isForexSymbol(symbol){
 
-    return forexPairs.has(
-        normalizeInput(symbol)
-    );
+return forexPairs.has(
+normalizeInput(symbol)
+);
 
 }
 
 
 function normalizeForex(symbol){
 
-    const clean =
-        normalizeInput(symbol);
+const clean =
+normalizeInput(symbol);
 
-    return (
-        clean.substring(0,3) +
-        "/" +
-        clean.substring(3,6)
-    );
+return (
+clean.substring(0,3)+
+"/"+
+clean.substring(3,6)
+);
 
 }
 
 
 function normalizeCrypto(symbol){
 
-    let clean =
-        normalizeInput(symbol);
+let clean =
+normalizeInput(symbol);
 
-    if(!clean.endsWith("USDT"))
-        clean += "USDT";
+if(!clean.endsWith("USDT"))
+clean+="USDT";
 
-    return clean;
+return clean;
 
 }
 
@@ -1105,373 +934,303 @@ function normalizeCrypto(symbol){
 
 function timeframeMinutes(tf){
 
-    const map = {
+const map={
 
-        "1":1,
-        "5":5,
-        "15":15,
-        "30":30,
-        "60":60,
-        "240":240,
-        "D":1440
+"1":1,
+"5":5,
+"15":15,
+"30":30,
+"60":60,
+"240":240,
+"D":1440
 
-    };
+};
 
-    return map[tf] || 5;
+return map[tf] || 5;
 
 }
 
 
 function timeframeLabel(tf){
 
-    const map = {
+const map={
 
-        "1":"1м",
-        "5":"5м",
-        "15":"15м",
-        "30":"30м",
-        "60":"1ч",
-        "240":"4ч",
-        "D":"1д"
+"1":"1м",
+"5":"5м",
+"15":"15м",
+"30":"30м",
+"60":"1ч",
+"240":"4ч",
+"D":"1д"
 
-    };
+};
 
-    return map[tf] || tf;
+return map[tf] || tf;
 
 }
 
 
 /* =========================================================
-   PERSIST CARD SETTINGS
+   STORAGE
 ========================================================= */
 
 function saveCards(){
 
-    const symbols =
-        Object.values(cards)
-            .map(c => {
+const symbols =
+Object.values(cards)
+.map(c=>{
 
-                if(c.type === "forex")
-                    return c.symbol.replace("/","");
+if(c.type==="forex")
+return c.symbol.replace("/","");
 
-                return c.symbol;
+return c.symbol;
 
-            });
+});
 
-
-    localStorage.setItem(
-        "cryptoScreenCards",
-        JSON.stringify(symbols)
-    );
+localStorage.setItem(
+"cryptoScreenCards",
+JSON.stringify(symbols)
+);
 
 }
 
 
 /* =========================================================
-   CARD CREATION
+   CREATE CARDS
 ========================================================= */
 
 function createCards(){
 
-    grid.innerHTML = "";
+grid.innerHTML="";
 
+defaultCoins
+.forEach((symbol,index)=>{
 
-    defaultCoins.forEach(
-        (symbol,index)=>{
+const clean =
+normalizeInput(symbol);
 
-            const clean =
-                normalizeInput(symbol);
+const forex =
+isForexSymbol(clean);
 
+const actualSymbol =
+forex
+?normalizeForex(clean)
+:normalizeCrypto(clean);
 
-            const forex =
-                isForexSymbol(clean);
+const card =
+document.createElement("div");
 
+card.className="card";
 
-            const actualSymbol =
-                forex
-                    ? normalizeForex(clean)
-                    : normalizeCrypto(clean);
+card.innerHTML=`
 
+<div class="card-top">
 
-            const card =
-                document.createElement("div");
+<div class="coin-row">
 
+<div>
 
-            card.className =
-                "card";
+<div
+class="coin-name"
+id="name-${index}">
+${forex
+?actualSymbol
+:actualSymbol.replace("USDT","")}
+</div>
 
+<div
+class="coin-symbol"
+id="symbol-${index}">
+${actualSymbol}
+</div>
 
-            card.innerHTML = `
+<div
+class="market-badge ${forex?"forex":""}"
+id="market-${index}">
+${forex?"FOREX":"CRYPTO"}
+</div>
 
-                <div class="card-top">
+</div>
 
-                    <div class="coin-row">
+<div
+class="change positive"
+id="change-${index}">
+0.00%
+</div>
 
-                        <div>
+</div>
 
-                            <div
-                                class="coin-name"
-                                id="name-${index}">
-                                ${forex
-                                    ? actualSymbol
-                                    : actualSymbol.replace(
-                                        "USDT",
-                                        ""
-                                    )}
-                            </div>
 
+<div
+class="price"
+id="price-${index}">
+---
+</div>
 
-                            <div
-                                class="coin-symbol"
-                                id="symbol-${index}">
-                                ${actualSymbol}
-                            </div>
 
+<div class="stats">
 
-                            <div
-                                class="market-badge ${forex ? "forex":""}"
-                                id="market-${index}">
-                                ${forex
-                                    ? "FOREX"
-                                    : "CRYPTO"}
-                            </div>
+<div class="stat">
 
-                        </div>
+<div class="stat-label">
+Максимум
+</div>
 
+<div
+class="stat-value"
+id="high-${index}">
+---
+</div>
 
-                        <div
-                            class="change positive"
-                            id="change-${index}">
-                            0.00%
-                        </div>
+</div>
 
-                    </div>
 
+<div class="stat">
 
-                    <div
-                        class="price"
-                        id="price-${index}">
-                        ---
-                    </div>
+<div class="stat-label">
+Минимум
+</div>
 
+<div
+class="stat-value"
+id="low-${index}">
+---
+</div>
 
-                    <div class="stats">
+</div>
 
 
-                        <div class="stat">
+<div class="stat">
 
-                            <div class="stat-label">
-                                Максимум
-                            </div>
+<div class="stat-label">
+Объём
+</div>
 
-                            <div
-                                class="stat-value"
-                                id="high-${index}">
-                                ---
-                            </div>
+<div
+class="stat-value"
+id="volume-${index}">
+---
+</div>
 
-                        </div>
+</div>
 
+</div>
 
-                        <div class="stat">
 
-                            <div class="stat-label">
-                                Минимум
-                            </div>
+<div class="controls">
 
-                            <div
-                                class="stat-value"
-                                id="low-${index}">
-                                ---
-                            </div>
+<input
+class="pair-input"
+id="input-${index}"
+value="${actualSymbol}"
+placeholder="BTC / AUDCAD"
+>
 
-                        </div>
+<button
+class="apply-btn"
+onclick="changePair(${index})">
+OK
+</button>
 
+</div>
 
-                        <div class="stat">
 
-                            <div class="stat-label">
-                                Объём
-                            </div>
+<div class="timeframes">
 
-                            <div
-                                class="stat-value"
-                                id="volume-${index}">
-                                ---
-                            </div>
+<button class="timeframe"
+onclick="changeTimeframe(${index},'1',this)">
+1м
+</button>
 
-                        </div>
+<button class="timeframe active"
+onclick="changeTimeframe(${index},'5',this)">
+5м
+</button>
 
-
-                    </div>
+<button class="timeframe"
+onclick="changeTimeframe(${index},'15',this)">
+15м
+</button>
 
+<button class="timeframe"
+onclick="changeTimeframe(${index},'30',this)">
+30м
+</button>
 
-                    <div class="controls">
+<button class="timeframe"
+onclick="changeTimeframe(${index},'60',this)">
+1ч
+</button>
 
-                        <input
-                            class="pair-input"
-                            id="input-${index}"
-                            value="${actualSymbol}"
-                            placeholder="BTC / AUDCAD"
-                        >
+<button class="timeframe"
+onclick="changeTimeframe(${index},'240',this)">
+4ч
+</button>
 
+<button class="timeframe"
+onclick="changeTimeframe(${index},'D',this)">
+1д
+</button>
 
-                        <button
-                            class="apply-btn"
-                            onclick="changePair(${index})">
-                            OK
-                        </button>
+</div>
 
-                    </div>
 
+<div class="signal-box">
 
-                    <div class="timeframes">
+<div class="signal-title">
+Торговый сигнал
+</div>
 
+<div
+class="signal-main signal-wait"
+id="signal-${index}">
+АНАЛИЗ...
+</div>
 
-                        <button
-                            class="timeframe"
-                            onclick="changeTimeframe(
-                                ${index},
-                                '1',
-                                this
-                            )">
-                            1м
-                        </button>
+<div
+class="signal-info"
+id="signal-info-${index}">
+Получение 250 свечей...
+</div>
 
+<div
+class="signal-factors"
+id="factors-${index}">
+</div>
 
-                        <button
-                            class="timeframe active"
-                            onclick="changeTimeframe(
-                                ${index},
-                                '5',
-                                this
-                            )">
-                            5м
-                        </button>
+</div>
 
 
-                        <button
-                            class="timeframe"
-                            onclick="changeTimeframe(
-                                ${index},
-                                '15',
-                                this
-                            )">
-                            15м
-                        </button>
+<div
+class="error"
+id="error-${index}">
+</div>
 
+</div>
 
-                        <button
-                            class="timeframe"
-                            onclick="changeTimeframe(
-                                ${index},
-                                '30',
-                                this
-                            )">
-                            30м
-                        </button>
 
+<div
+class="chart"
+id="chart-${index}">
+</div>
 
-                        <button
-                            class="timeframe"
-                            onclick="changeTimeframe(
-                                ${index},
-                                '60',
-                                this
-                            )">
-                            1ч
-                        </button>
+`;
 
+grid.appendChild(card);
 
-                        <button
-                            class="timeframe"
-                            onclick="changeTimeframe(
-                                ${index},
-                                '240',
-                                this
-                            )">
-                            4ч
-                        </button>
+cards[index]={
 
+symbol:actualSymbol,
+type:forex?"forex":"crypto",
+interval:"5",
 
-                        <button
-                            class="timeframe"
-                            onclick="changeTimeframe(
-                                ${index},
-                                'D',
-                                this
-                            )">
-                            1д
-                        </button>
+lastCandles:null,
+lastResult:null,
+lastPrice:null
 
+};
 
-                    </div>
-
-
-                    <div class="signal-box">
-
-                        <div class="signal-title">
-                            Торговый сигнал
-                        </div>
-
-
-                        <div
-                            class="signal-main signal-wait"
-                            id="signal-${index}">
-                            АНАЛИЗ...
-                        </div>
-
-
-                        <div
-                            class="signal-info"
-                            id="signal-info-${index}">
-                            Получение данных...
-                        </div>
-
-
-                        <div
-                            class="signal-factors"
-                            id="factors-${index}">
-                        </div>
-
-                    </div>
-
-
-                    <div
-                        class="error"
-                        id="error-${index}">
-                    </div>
-
-
-                </div>
-
-
-                <div
-                    class="chart"
-                    id="chart-${index}">
-                </div>
-
-            `;
-
-
-            grid.appendChild(card);
-
-
-            cards[index] = {
-
-                symbol:actualSymbol,
-
-                type:
-                    forex
-                        ? "forex"
-                        : "crypto",
-
-                interval:"5"
-
-            };
-
-        }
-    );
+});
 
 }
 
@@ -1482,135 +1241,100 @@ function createCards(){
 
 function connectBinance(){
 
-    if(socket){
+if(socket){
 
-        try{
-            socket.close();
-        }
-        catch(e){}
+try{
+socket.close();
+}catch(e){}
 
-    }
+}
 
+const symbols =
+Object.values(cards)
+.filter(c=>c.type==="crypto")
+.map(c=>c.symbol.toLowerCase());
 
-    const symbols =
-        Object.values(cards)
-            .filter(
-                c=>c.type==="crypto"
-            )
-            .map(
-                c=>c.symbol.toLowerCase()
-            );
+if(!symbols.length){
 
+connection.textContent="● Forex режим";
+connection.style.color="#ffb020";
 
-    if(!symbols.length){
+return;
 
-        connection.textContent =
-            "● Forex режим";
+}
 
-        connection.style.color =
-            "#ffb020";
+const streams =
+symbols
+.map(s=>s+"@ticker")
+.join("/");
 
-        return;
+socket =
+new WebSocket(
+"wss://stream.binance.com:9443/stream?streams="+streams
+);
 
-    }
+socket.onopen=()=>{
 
+connection.textContent=
+"● Binance: онлайн";
 
-    const streams =
-        symbols
-            .map(
-                s=>s+"@ticker"
-            )
-            .join("/");
+connection.style.color="#00d68f";
 
+};
 
-    socket =
-        new WebSocket(
-            "wss://stream.binance.com:9443/stream?streams="+
-            streams
-        );
+socket.onmessage=event=>{
 
+try{
 
-    socket.onopen = ()=>{
+const message =
+JSON.parse(event.data);
 
-        connection.textContent =
-            "● Binance: онлайн";
+const data =
+message.data;
 
-        connection.style.color =
-            "#00d68f";
+if(!data || !data.s)
+return;
 
-    };
+Object.keys(cards)
+.forEach(index=>{
 
+if(
+cards[index].type==="crypto" &&
+cards[index].symbol===data.s
+){
 
-    socket.onmessage = event=>{
+updateCard(index,data);
 
-        try{
+}
 
-            const message =
-                JSON.parse(
-                    event.data
-                );
+});
 
+}catch(e){}
 
-            const data =
-                message.data;
+};
 
+socket.onerror=()=>{
 
-            if(
-                !data ||
-                !data.s
-            )
-                return;
+connection.textContent=
+"● Binance: ошибка";
 
+connection.style.color="#ff536d";
 
-            Object.keys(cards)
-                .forEach(index=>{
+};
 
-                    if(
-                        cards[index].type==="crypto" &&
-                        cards[index].symbol===data.s
-                    ){
+socket.onclose=()=>{
 
-                        updateCard(
-                            index,
-                            data
-                        );
+connection.textContent=
+"● Переподключение...";
 
-                    }
+connection.style.color="#ffb020";
 
-                });
+setTimeout(
+connectBinance,
+3000
+);
 
-        }
-        catch(e){}
-
-    };
-
-
-    socket.onerror = ()=>{
-
-        connection.textContent =
-            "● Binance: ошибка";
-
-        connection.style.color =
-            "#ff536d";
-
-    };
-
-
-    socket.onclose = ()=>{
-
-        connection.textContent =
-            "● Переподключение...";
-
-        connection.style.color =
-            "#ffb020";
-
-
-        setTimeout(
-            connectBinance,
-            3000
-        );
-
-    };
+};
 
 }
 
@@ -1621,55 +1345,49 @@ function connectBinance(){
 
 function updateCard(index,data){
 
-    const price =
-        parseFloat(data.c);
+const price =
+parseFloat(data.c);
+
+const change =
+parseFloat(data.P);
+
+document.getElementById(
+`price-${index}`
+).textContent =
+formatPrice(price);
 
 
-    const change =
-        parseFloat(data.P);
+const changeElement =
+document.getElementById(
+`change-${index}`
+);
+
+changeElement.textContent =
+(change>=0?"+":"")+
+change.toFixed(2)+
+"%";
+
+changeElement.className =
+"change "+
+(change>=0
+?"positive"
+:"negative");
 
 
-    document.getElementById(
-        `price-${index}`
-    ).textContent =
-        formatPrice(price);
+document.getElementById(
+`high-${index}`
+).textContent =
+formatPrice(
+parseFloat(data.h)
+);
 
 
-    const changeElement =
-        document.getElementById(
-            `change-${index}`
-        );
-
-
-    changeElement.textContent =
-        (change>=0?"+":"")+
-        change.toFixed(2)+
-        "%";
-
-
-    changeElement.className =
-        "change "+
-        (
-            change>=0
-                ?"positive"
-                :"negative"
-        );
-
-
-    document.getElementById(
-        `high-${index}`
-    ).textContent =
-        formatPrice(
-            parseFloat(data.h)
-        );
-
-
-    document.getElementById(
-        `low-${index}`
-    ).textContent =
-        formatPrice(
-            parseFloat(data.l)
-        );
+document.getElementById(
+`low-${index}`
+).textContent =
+formatPrice(
+parseFloat(data.l)
+);
 
 }
 
@@ -1680,115 +1398,101 @@ function updateCard(index,data){
 
 function twelveInterval(interval){
 
-    const map={
+const map={
 
-        "1":"1min",
-        "5":"5min",
-        "15":"15min",
-        "30":"30min",
-        "60":"1h",
-        "240":"4h",
-        "D":"1day"
+"1":"1min",
+"5":"5min",
+"15":"15min",
+"30":"30min",
+"60":"1h",
+"240":"4h",
+"D":"1day"
 
-    };
+};
 
-    return map[interval] || "5min";
+return map[interval] || "5min";
 
 }
 
 
 async function getForexKlines(
-    symbol,
-    interval
+symbol,
+interval
 ){
 
-    if(
-        !TWELVE_DATA_API_KEY ||
-        TWELVE_DATA_API_KEY.includes(
-            "PASTE_YOUR"
-        )
-    ){
+if(
+!TWELVE_DATA_API_KEY ||
+TWELVE_DATA_API_KEY.includes(
+"PASTE_YOUR"
+)
+){
 
-        throw new Error(
-            "Не указан API-ключ Twelve Data"
-        );
+throw new Error(
+"Не указан API-ключ Twelve Data"
+);
 
-    }
+}
 
+const pair =
+normalizeForex(symbol);
 
-    const pair =
-        normalizeForex(symbol);
+const url =
+"https://api.twelvedata.com/time_series"+
+"?symbol="+
+encodeURIComponent(pair)+
+"&interval="+
+twelveInterval(interval)+
+"&outputsize="+
+ANALYSIS_CANDLES+
+"&apikey="+
+encodeURIComponent(
+TWELVE_DATA_API_KEY
+);
 
+const response =
+await fetch(url);
 
-    const url =
-        "https://api.twelvedata.com/time_series"+
-        "?symbol="+
-        encodeURIComponent(pair)+
-        "&interval="+
-        twelveInterval(interval)+
-        "&outputsize=100"+
-        "&apikey="+
-        encodeURIComponent(
-            TWELVE_DATA_API_KEY
-        );
+if(!response.ok){
 
+throw new Error(
+"Ошибка Twelve Data: "+
+response.status
+);
 
-    const response =
-        await fetch(url);
+}
 
+const json =
+await response.json();
 
-    if(!response.ok){
+if(
+json.status==="error" ||
+!json.values
+){
 
-        throw new Error(
-            "Ошибка Twelve Data: "+
-            response.status
-        );
+throw new Error(
+json.message ||
+"Forex-пара не найдена"
+);
 
-    }
+}
 
+return json.values
+.reverse()
+.map(c=>({
 
-    const json =
-        await response.json();
+time:new Date(
+c.datetime
+).getTime(),
 
+open:parseFloat(c.open),
+high:parseFloat(c.high),
+low:parseFloat(c.low),
+close:parseFloat(c.close),
 
-    if(
-        json.status==="error" ||
-        !json.values
-    ){
+volume:
+parseFloat(c.volume)||0
 
-        throw new Error(
-            json.message ||
-            "Forex-пара не найдена"
-        );
-
-    }
-
-
-    return json.values
-        .reverse()
-        .map(c=>({
-
-            time:
-                new Date(
-                    c.datetime
-                ).getTime(),
-
-            open:
-                parseFloat(c.open),
-
-            high:
-                parseFloat(c.high),
-
-            low:
-                parseFloat(c.low),
-
-            close:
-                parseFloat(c.close),
-
-            volume:
-                parseFloat(c.volume)||0
-
-        }));
+}));
 
 }
 
@@ -1799,422 +1503,687 @@ async function getForexKlines(
 
 function binanceInterval(interval){
 
-    const map={
+const map={
 
-        "1":"1m",
-        "5":"5m",
-        "15":"15m",
-        "30":"30m",
-        "60":"1h",
-        "240":"4h",
-        "D":"1d"
+"1":"1m",
+"5":"5m",
+"15":"15m",
+"30":"30m",
+"60":"1h",
+"240":"4h",
+"D":"1d"
 
-    };
+};
 
-    return map[interval] || "5m";
+return map[interval] || "5m";
 
 }
 
 
 async function getCryptoKlines(
-    symbol,
-    interval
+symbol,
+interval
 ){
 
-    const url =
-        "https://api.binance.com/api/v3/klines"+
-        "?symbol="+
-        encodeURIComponent(symbol)+
-        "&interval="+
-        binanceInterval(interval)+
-        "&limit=100";
+const url =
+"https://api.binance.com/api/v3/klines"+
+"?symbol="+
+encodeURIComponent(symbol)+
+"&interval="+
+binanceInterval(interval)+
+"&limit="+
+ANALYSIS_CANDLES;
 
+const response =
+await fetch(url);
 
-    const response =
-        await fetch(url);
+if(!response.ok){
 
+throw new Error(
+"Пара не найдена на Binance"
+);
 
-    if(!response.ok){
+}
 
-        throw new Error(
-            "Пара не найдена на Binance"
-        );
+const data =
+await response.json();
 
-    }
+return data.map(c=>({
 
+time:c[0],
 
-    const data =
-        await response.json();
+open:parseFloat(c[1]),
+high:parseFloat(c[2]),
+low:parseFloat(c[3]),
+close:parseFloat(c[4]),
+volume:parseFloat(c[5])
 
-
-    return data.map(c=>({
-
-        time:c[0],
-
-        open:
-            parseFloat(c[1]),
-
-        high:
-            parseFloat(c[2]),
-
-        low:
-            parseFloat(c[3]),
-
-        close:
-            parseFloat(c[4]),
-
-        volume:
-            parseFloat(c[5])
-
-    }));
+}));
 
 }
 
 
 /* =========================================================
-   INDICATORS
+   EMA
 ========================================================= */
 
 function ema(values,period){
 
-    if(values.length<period)
-        return null;
+if(values.length<period)
+return null;
 
+const multiplier=
+2/(period+1);
 
-    const multiplier =
-        2/(period+1);
+let result=
+values
+.slice(0,period)
+.reduce((a,b)=>a+b,0)
+/period;
 
-
-    let result =
-        values
-            .slice(0,period)
-            .reduce(
-                (a,b)=>a+b,
-                0
-            )/period;
-
-
-    for(
-        let i=period;
-        i<values.length;
-        i++
-    ){
-
-        result =
-            (values[i]-result)*
-            multiplier+
-            result;
-
-    }
-
-
-    return result;
-
-}
-
-
-function rsi(
-    values,
-    period=14
+for(
+let i=period;
+i<values.length;
+i++
 ){
 
-    if(values.length<=period)
-        return 50;
-
-
-    let gains=0;
-    let losses=0;
-
-
-    for(
-        let i=1;
-        i<=period;
-        i++
-    ){
-
-        const diff =
-            values[i]-
-            values[i-1];
-
-
-        if(diff>=0)
-            gains+=diff;
-        else
-            losses-=diff;
-
-    }
-
-
-    let avgGain =
-        gains/period;
-
-
-    let avgLoss =
-        losses/period;
-
-
-    for(
-        let i=period+1;
-        i<values.length;
-        i++
-    ){
-
-        const diff =
-            values[i]-
-            values[i-1];
-
-
-        const gain =
-            Math.max(
-                diff,
-                0
-            );
-
-
-        const loss =
-            Math.max(
-                -diff,
-                0
-            );
-
-
-        avgGain =
-            (
-                avgGain*(period-1)+
-                gain
-            )/period;
-
-
-        avgLoss =
-            (
-                avgLoss*(period-1)+
-                loss
-            )/period;
-
-    }
-
-
-    if(avgLoss===0)
-        return 100;
-
-
-    const rs =
-        avgGain/avgLoss;
-
-
-    return 100-
-        (100/(1+rs));
+result=
+(values[i]-result)*
+multiplier+
+result;
 
 }
 
-
-function atr(
-    candles,
-    period=14
-){
-
-    if(candles.length<=period)
-        return 0;
-
-
-    const trs=[];
-
-
-    for(
-        let i=1;
-        i<candles.length;
-        i++
-    ){
-
-        const c=candles[i];
-        const p=candles[i-1];
-
-
-        trs.push(
-
-            Math.max(
-
-                c.high-c.low,
-
-                Math.abs(
-                    c.high-p.close
-                ),
-
-                Math.abs(
-                    c.low-p.close
-                )
-
-            )
-
-        );
-
-    }
-
-
-    return trs
-        .slice(-period)
-        .reduce(
-            (a,b)=>a+b,
-            0
-        )/period;
-
-}
-
-
-function averageVolume(
-    candles,
-    period=20
-){
-
-    const values =
-        candles
-            .slice(-period)
-            .map(
-                c=>c.volume||0
-            );
-
-
-    if(!values.length)
-        return 0;
-
-
-    return values.reduce(
-        (a,b)=>a+b,
-        0
-    )/values.length;
-
-}
-
-
-function macd(values){
-
-    if(values.length<35){
-
-        return {
-            macd:0,
-            signal:0
-        };
-
-    }
-
-
-    const fast =
-        ema(values,12);
-
-
-    const slow =
-        ema(values,26);
-
-
-    const line =
-        fast-slow;
-
-
-    const previous =
-        values.slice(
-            0,
-            values.length-1
-        );
-
-
-    const prevFast =
-        ema(previous,12);
-
-
-    const prevSlow =
-        ema(previous,26);
-
-
-    return {
-
-        macd:line,
-
-        signal:
-            prevFast-prevSlow
-
-    };
+return result;
 
 }
 
 
 /* =========================================================
-   CANDLE / STRUCTURE ANALYSIS
+   RSI
+========================================================= */
+
+function rsi(
+values,
+period=14
+){
+
+if(values.length<=period)
+return 50;
+
+let gains=0;
+let losses=0;
+
+for(
+let i=1;
+i<=period;
+i++
+){
+
+const diff=
+values[i]-values[i-1];
+
+if(diff>=0)
+gains+=diff;
+else
+losses-=diff;
+
+}
+
+let avgGain=
+gains/period;
+
+let avgLoss=
+losses/period;
+
+for(
+let i=period+1;
+i<values.length;
+i++
+){
+
+const diff=
+values[i]-values[i-1];
+
+const gain=
+Math.max(diff,0);
+
+const loss=
+Math.max(-diff,0);
+
+avgGain=
+(
+avgGain*(period-1)+
+gain
+)/period;
+
+avgLoss=
+(
+avgLoss*(period-1)+
+loss
+)/period;
+
+}
+
+if(avgLoss===0)
+return 100;
+
+const rs=
+avgGain/avgLoss;
+
+return 100-
+100/(1+rs);
+
+}
+
+
+/* =========================================================
+   ATR
+========================================================= */
+
+function atr(
+candles,
+period=14
+){
+
+if(candles.length<=period)
+return 0;
+
+const trs=[];
+
+for(
+let i=1;
+i<candles.length;
+i++
+){
+
+const c=candles[i];
+const p=candles[i-1];
+
+trs.push(
+Math.max(
+c.high-c.low,
+Math.abs(
+c.high-p.close
+),
+Math.abs(
+c.low-p.close
+)
+)
+);
+
+}
+
+return trs
+.slice(-period)
+.reduce((a,b)=>a+b,0)
+/period;
+
+}
+
+
+/* =========================================================
+   AVERAGE VOLUME
+========================================================= */
+
+function averageVolume(
+candles,
+period=20
+){
+
+const values=
+candles
+.slice(-period)
+.map(c=>c.volume||0);
+
+if(!values.length)
+return 0;
+
+return values.reduce(
+(a,b)=>a+b,0
+)/values.length;
+
+}
+
+
+/* =========================================================
+   MACD
+========================================================= */
+
+function macd(values){
+
+if(values.length<35){
+
+return{
+macd:0,
+signal:0
+};
+
+}
+
+const fast=
+ema(values,12);
+
+const slow=
+ema(values,26);
+
+const line=
+fast-slow;
+
+
+/*
+   Более корректно считаем
+   направление MACD через
+   предыдущий участок.
+*/
+
+const previous=
+values.slice(
+0,
+values.length-1
+);
+
+const prevFast=
+ema(previous,12);
+
+const prevSlow=
+ema(previous,26);
+
+return{
+
+macd:line,
+
+signal:
+prevFast-prevSlow
+
+};
+
+}
+
+
+/* =========================================================
+   SUPPORT / RESISTANCE
+========================================================= */
+
+function findLevels(candles){
+
+const recent=
+candles.slice(
+Math.max(
+0,
+candles.length-100
+)
+);
+
+const highs=
+recent.map(c=>c.high);
+
+const lows=
+recent.map(c=>c.low);
+
+const resistance=
+Math.max(...highs);
+
+const support=
+Math.min(...lows);
+
+return{
+support,
+resistance
+};
+
+}
+
+
+/* =========================================================
+   STRUCTURE
+========================================================= */
+
+function marketStructure(candles){
+
+if(candles.length<30){
+
+return{
+direction:"NEUTRAL",
+score:0,
+text:"Структура: нет данных"
+};
+
+}
+
+const recent=
+candles.slice(-30);
+
+const first=
+recent.slice(0,10);
+
+const middle=
+recent.slice(10,20);
+
+const last=
+recent.slice(20,30);
+
+const firstHigh=
+Math.max(
+...first.map(c=>c.high)
+);
+
+const middleHigh=
+Math.max(
+...middle.map(c=>c.high)
+);
+
+const lastHigh=
+Math.max(
+...last.map(c=>c.high)
+);
+
+const firstLow=
+Math.min(
+...first.map(c=>c.low)
+);
+
+const middleLow=
+Math.min(
+...middle.map(c=>c.low)
+);
+
+const lastLow=
+Math.min(
+...last.map(c=>c.low)
+);
+
+if(
+lastHigh>middleHigh &&
+middleHigh>=firstHigh &&
+lastLow>middleLow
+){
+
+return{
+direction:"BULL",
+score:10,
+text:"Структура: HH/HL"
+};
+
+}
+
+if(
+lastLow<middleLow &&
+middleLow<=firstLow &&
+lastHigh<middleHigh
+){
+
+return{
+direction:"BEAR",
+score:-10,
+text:"Структура: LH/LL"
+};
+
+}
+
+return{
+direction:"NEUTRAL",
+score:0,
+text:"Структура: боковик"
+};
+
+}
+
+
+/* =========================================================
+   MOMENTUM
+========================================================= */
+
+function momentumAnalysis(candles){
+
+if(candles.length<20)
+return{
+score:0,
+text:"Импульс: нет данных"
+};
+
+const current=
+candles[candles.length-1].close;
+
+const previous=
+candles[candles.length-11].close;
+
+const change=
+(current-previous)/
+previous*100;
+
+if(change>1){
+
+return{
+score:8,
+text:
+"Импульс: сильный рост"
+};
+
+}
+
+if(change>0.25){
+
+return{
+score:4,
+text:
+"Импульс: рост"
+};
+
+}
+
+if(change<-1){
+
+return{
+score:-8,
+text:
+"Импульс: сильное падение"
+};
+
+}
+
+if(change<-0.25){
+
+return{
+score:-4,
+text:
+"Импульс: падение"
+};
+
+}
+
+return{
+score:0,
+text:
+"Импульс: слабый"
+};
+
+}
+
+
+/* =========================================================
+   CANDLE ANALYSIS
 ========================================================= */
 
 function candleAnalysis(candles){
 
-    const a =
-        candles[
-            candles.length-2
-        ];
+const a=
+candles[candles.length-2];
+
+const b=
+candles[candles.length-1];
+
+if(!a || !b){
+
+return{
+score:0,
+text:"Свечи: нет данных"
+};
+
+}
+
+const body=
+Math.abs(
+b.close-b.open
+);
+
+const range=
+b.high-b.low;
+
+if(range<=0){
+
+return{
+score:0,
+text:"Свечи: нейтрально"
+};
+
+}
+
+const bodyRatio=
+body/range;
+
+const bullish=
+b.close>b.open;
+
+if(bodyRatio>.65){
+
+return{
+
+score:
+bullish?6:-6,
+
+text:
+bullish
+?"Свеча: сильный рост"
+:"Свеча: сильное падение"
+
+};
+
+}
+
+return{
+
+score:
+bullish?1:-1,
+
+text:
+bullish
+?"Свеча: бычья"
+:"Свеча: медвежья"
+
+};
+
+}
 
 
-    const b =
-        candles[
-            candles.length-1
-        ];
+/* =========================================================
+   ORDER BLOCK / ЗОНА ИМПУЛЬСА
+========================================================= */
 
+function orderBlockAnalysis(candles){
 
-    if(!a || !b)
-        return {
-            score:0,
-            text:"Свечи: нет данных"
-        };
+if(candles.length<30){
 
+return{
+score:0,
+text:"OB: нет данных"
+};
 
-    const body =
-        Math.abs(
-            b.close-b.open
-        );
+}
 
+const last=
+candles[candles.length-1];
 
-    const range =
-        b.high-b.low;
+const lookback=
+candles.slice(
+-25,
+-3
+);
 
+let bullishZone=false;
+let bearishZone=false;
 
-    if(range<=0)
-        return {
-            score:0,
-            text:"Свечи: нейтрально"
-        };
+for(let i=0;i<lookback.length-3;i++){
 
+const c=
+lookback[i];
 
-    const bodyRatio =
-        body/range;
+const next1=
+lookback[i+1];
 
+const next2=
+lookback[i+2];
 
-    const bullish =
-        b.close>b.open;
+const moveUp=
+next2.close-c.close;
 
+const moveDown=
+c.close-next2.close;
 
-    if(bodyRatio>.65){
+const range=
+c.high-c.low;
 
-        return {
+if(
+range<=0
+)
+continue;
 
-            score:
-                bullish?8:-8,
+if(
+c.close<c.open &&
+moveUp>range*1.5
+){
 
-            text:
-                bullish
-                    ?"Свеча: сильный рост"
-                    :"Свеча: сильное падение"
+if(
+last.close>=c.low &&
+last.close<=c.high*1.003
+){
 
-        };
+bullishZone=true;
 
-    }
+}
 
+}
 
-    return {
+if(
+c.close>c.open &&
+moveDown>range*1.5
+){
 
-        score:
-            bullish?2:-2,
+if(
+last.close<=c.high &&
+last.close>=c.low*0.997
+){
 
-        text:
-            bullish
-                ?"Свеча: бычья"
-                :"Свеча: медвежья"
+bearishZone=true;
 
-    };
+}
+
+}
+
+}
+
+if(bullishZone){
+
+return{
+score:8,
+text:"Зона: бычий OB"
+};
+
+}
+
+if(bearishZone){
+
+return{
+score:-8,
+text:"Зона: медвежий OB"
+};
+
+}
+
+return{
+score:0,
+text:"Зона: OB не найден"
+};
 
 }
 
@@ -2225,410 +2194,533 @@ function candleAnalysis(candles){
 
 function calculateSignal(candles){
 
-    if(
-        !candles ||
-        candles.length<35
-    ){
+if(
+!candles ||
+candles.length<100
+){
 
-        return {
+return{
 
-            signal:"WAIT",
+signal:"WAIT",
+score:50,
 
-            score:50,
+info:
+"Недостаточно данных",
 
-            info:
-                "Недостаточно данных",
+factors:[]
 
-            factors:[]
+};
 
-        };
+}
 
-    }
 
+/*
+   Используем последние 250 свечей,
+   если API вернул меньше — используем всё.
+*/
 
-    const closes =
-        candles.map(
-            c=>c.close
-        );
+const data=
+candles.slice(-ANALYSIS_CANDLES);
 
+const closes=
+data.map(c=>c.close);
 
-    const last =
-        closes[
-            closes.length-1
-        ];
+const last=
+closes[closes.length-1];
 
 
-    const ema9 =
-        ema(
-            closes,
-            9
-        );
+const ema20=
+ema(closes,20);
 
+const ema50=
+ema(closes,50);
 
-    const ema21 =
-        ema(
-            closes,
-            21
-        );
+const ema200=
+ema(closes,200);
 
 
-    const rsiValue =
-        rsi(
-            closes,
-            14
-        );
+const rsiValue=
+rsi(closes,14);
 
+const atrValue=
+atr(data,14);
 
-    const atrValue =
-        atr(
-            candles,
-            14
-        );
+const macdValue=
+macd(closes);
 
+const avgVol=
+averageVolume(data,20);
 
-    const macdValue =
-        macd(closes);
+const currentVol=
+data[data.length-1].volume||0;
 
 
-    const avgVol =
-        averageVolume(
-            candles,
-            20
-        );
+const structure=
+marketStructure(data);
 
+const momentum=
+momentumAnalysis(data);
 
-    const currentVol =
-        candles[
-            candles.length-1
-        ].volume||0;
+const candle=
+candleAnalysis(data);
 
+const orderBlock=
+orderBlockAnalysis(data);
 
-    const candle =
-        candleAnalysis(
-            candles
-        );
+const levels=
+findLevels(data);
 
 
-    let score=50;
+let score=50;
 
+const factors=[];
 
-    const factors=[];
 
+/* =========================================================
+   EMA 20 / 50
+========================================================= */
 
-    /* EMA */
+if(
+ema20!==null &&
+ema50!==null
+){
 
-    if(
-        ema9!==null &&
-        ema21!==null
-    ){
+if(ema20>ema50){
 
-        if(ema9>ema21){
+score+=10;
 
-            score+=15;
+factors.push({
+text:"EMA20 > EMA50",
+type:"good"
+});
 
-            factors.push({
+}else{
 
-                text:"EMA: рост",
+score-=10;
 
-                type:"good"
+factors.push({
+text:"EMA20 < EMA50",
+type:"bad"
+});
 
-            });
-
-        }
-        else{
-
-            score-=15;
-
-            factors.push({
-
-                text:"EMA: падение",
-
-                type:"bad"
-
-            });
-
-        }
-
-    }
-
-
-    /* RSI */
-
-    if(rsiValue<30){
-
-        score+=12;
-
-        factors.push({
-
-            text:"RSI: перепродан",
-
-            type:"good"
-
-        });
-
-    }
-    else if(rsiValue>70){
-
-        score-=12;
-
-        factors.push({
-
-            text:"RSI: перекуплен",
-
-            type:"bad"
-
-        });
-
-    }
-    else if(rsiValue>=50){
-
-        score+=5;
-
-        factors.push({
-
-            text:"RSI: бычий",
-
-            type:"good"
-
-        });
-
-    }
-    else{
-
-        score-=5;
-
-        factors.push({
-
-            text:"RSI: медвежий",
-
-            type:"bad"
-
-        });
-
-    }
-
-
-    /* MACD */
-
-    if(
-        macdValue.macd>
-        macdValue.signal
-    ){
-
-        score+=10;
-
-        factors.push({
-
-            text:"MACD: бычий",
-
-            type:"good"
-
-        });
-
-    }
-    else{
-
-        score-=10;
-
-        factors.push({
-
-            text:"MACD: медвежий",
-
-            type:"bad"
-
-        });
-
-    }
-
-
-    /* VOLUME */
-
-    if(
-        avgVol>0 &&
-        currentVol>avgVol*1.2
-    ){
-
-        const lastCandle =
-            candles[
-                candles.length-1
-            ];
-
-
-        if(
-            lastCandle.close>
-            lastCandle.open
-        ){
-
-            score+=8;
-
-            factors.push({
-
-                text:"Объём: покупки",
-
-                type:"good"
-
-            });
-
-        }
-        else{
-
-            score-=8;
-
-            factors.push({
-
-                text:"Объём: продажи",
-
-                type:"bad"
-
-            });
-
-        }
-
-    }
-    else{
-
-        factors.push({
-
-            text:"Объём: обычный",
-
-            type:"neutral"
-
-        });
-
-    }
-
-
-    /* VOLATILITY */
-
-    const volatility =
-        last>0
-            ?atrValue/last*100
-            :0;
-
-
-    factors.push({
-
-        text:
-            volatility>=1
-                ?"Волатильность: высокая"
-                :"Волатильность: нормальная",
-
-        type:"neutral"
-
-    });
-
-
-    /* CANDLE */
-
-    score+=candle.score;
-
-
-    factors.push({
-
-        text:candle.text,
-
-        type:
-            candle.score>0
-                ?"good"
-                :candle.score<0
-                    ?"bad"
-                    :"neutral"
-
-    });
-
-
-    score =
-        Math.max(
-            0,
-            Math.min(
-                100,
-                Math.round(score)
-            )
-        );
-
-
-    let signal="WAIT";
-
-
-    if(score>=70)
-        signal="BUY";
-
-    else if(score<=30)
-        signal="SELL";
-
-
-    return {
-
-        signal,
-
-        score,
-
-        info:
-            `Сила: ${score}/100 • RSI ${rsiValue.toFixed(1)} • ATR ${volatility.toFixed(2)}%`,
-
-        factors
-
-    };
+}
 
 }
 
 
 /* =========================================================
-   SIGNAL DISPLAY
+   EMA 200
 ========================================================= */
 
-function showSignal(
-    index,
-    result
+if(ema200!==null){
+
+if(last>ema200){
+
+score+=10;
+
+factors.push({
+text:"Цена выше EMA200",
+type:"good"
+});
+
+}else{
+
+score-=10;
+
+factors.push({
+text:"Цена ниже EMA200",
+type:"bad"
+});
+
+}
+
+}
+
+
+/* =========================================================
+   RSI
+========================================================= */
+
+if(rsiValue<30){
+
+score+=8;
+
+factors.push({
+text:"RSI: перепродан",
+type:"good"
+});
+
+}
+else if(rsiValue>70){
+
+score-=8;
+
+factors.push({
+text:"RSI: перекуплен",
+type:"bad"
+});
+
+}
+else if(rsiValue>=52){
+
+score+=5;
+
+factors.push({
+text:"RSI: бычий",
+type:"good"
+});
+
+}
+else if(rsiValue<=48){
+
+score-=5;
+
+factors.push({
+text:"RSI: медвежий",
+type:"bad"
+});
+
+}
+else{
+
+factors.push({
+text:"RSI: нейтральный",
+type:"neutral"
+});
+
+}
+
+
+/* =========================================================
+   MACD
+========================================================= */
+
+if(
+macdValue.macd>
+macdValue.signal
 ){
 
-    const signal =
-        document.getElementById(
-            `signal-${index}`
-        );
+score+=8;
+
+factors.push({
+text:"MACD: бычий",
+type:"good"
+});
+
+}else{
+
+score-=8;
+
+factors.push({
+text:"MACD: медвежий",
+type:"bad"
+});
+
+}
 
 
-    const info =
-        document.getElementById(
-            `signal-info-${index}`
-        );
+/* =========================================================
+   STRUCTURE
+========================================================= */
+
+score+=structure.score;
+
+factors.push({
+text:structure.text,
+type:
+structure.score>0
+?"good"
+:structure.score<0
+?"bad"
+:"neutral"
+});
 
 
-    const factors =
-        document.getElementById(
-            `factors-${index}`
-        );
+/* =========================================================
+   MOMENTUM
+========================================================= */
+
+score+=momentum.score;
+
+factors.push({
+text:momentum.text,
+type:
+momentum.score>0
+?"good"
+:momentum.score<0
+?"bad"
+:"neutral"
+});
 
 
-    signal.textContent =
-        result.signal;
+/* =========================================================
+   ORDER BLOCK
+========================================================= */
+
+score+=orderBlock.score;
+
+factors.push({
+text:orderBlock.text,
+type:
+orderBlock.score>0
+?"good"
+:orderBlock.score<0
+?"bad"
+:"neutral"
+});
 
 
-    signal.className =
-        "signal-main "+
-        (
-            result.signal==="BUY"
-                ?"signal-buy"
-                :result.signal==="SELL"
-                    ?"signal-sell"
-                    :"signal-wait"
-        );
+/* =========================================================
+   SUPPORT / RESISTANCE
+========================================================= */
+
+const distanceSupport=
+Math.abs(
+last-levels.support
+)/last*100;
+
+const distanceResistance=
+Math.abs(
+levels.resistance-last
+)/last*100;
 
 
-    info.textContent =
-        result.info;
+/*
+   Не покупаем прямо под сопротивлением.
+   Не продаём прямо над поддержкой.
+*/
+
+if(
+distanceResistance<0.4
+){
+
+score-=7;
+
+factors.push({
+text:"Цена у сопротивления",
+type:"bad"
+});
+
+}
+else if(
+distanceSupport<0.4
+){
+
+score+=7;
+
+factors.push({
+text:"Цена у поддержки",
+type:"good"
+});
+
+}
+else{
+
+factors.push({
+text:"Уровни: свободная зона",
+type:"neutral"
+});
+
+}
 
 
-    factors.innerHTML =
-        result.factors
-            .map(
-                f=>`
-                    <div class="factor ${f.type}">
-                        ${f.text}
-                    </div>
-                `
-            )
-            .join("");
+/* =========================================================
+   VOLUME
+========================================================= */
+
+if(
+avgVol>0 &&
+currentVol>avgVol*1.25
+){
+
+const lastCandle=
+data[data.length-1];
+
+if(
+lastCandle.close>
+lastCandle.open
+){
+
+score+=6;
+
+factors.push({
+text:"Объём: покупки",
+type:"good"
+});
+
+}else{
+
+score-=6;
+
+factors.push({
+text:"Объём: продажи",
+type:"bad"
+});
+
+}
+
+}else{
+
+factors.push({
+text:"Объём: обычный",
+type:"neutral"
+});
+
+}
+
+
+/* =========================================================
+   VOLATILITY
+========================================================= */
+
+const volatility=
+last>0
+?atrValue/last*100
+:0;
+
+factors.push({
+
+text:
+volatility>=1
+?"ATR: высокая волатильность"
+:"ATR: нормальная",
+
+type:"neutral"
+
+});
+
+
+/* =========================================================
+   CANDLE
+========================================================= */
+
+score+=candle.score;
+
+factors.push({
+
+text:candle.text,
+
+type:
+candle.score>0
+?"good"
+:candle.score<0
+?"bad"
+:"neutral"
+
+});
+
+
+/* =========================================================
+   FINAL SCORE
+========================================================= */
+
+score=
+Math.max(
+0,
+Math.min(
+100,
+Math.round(score)
+)
+);
+
+
+/*
+   Очень важный фильтр.
+
+   Даже если score высокий,
+   не выдаём BUY, если структура
+   сильно медвежья.
+
+   И наоборот.
+*/
+
+let signal="WAIT";
+
+
+if(
+score>=MIN_SIGNAL_SCORE &&
+structure.direction!=="BEAR" &&
+ema20>ema50
+){
+
+signal="BUY";
+
+}
+else if(
+score<=100-MIN_SIGNAL_SCORE &&
+structure.direction!=="BULL" &&
+ema20<ema50
+){
+
+signal="SELL";
+
+}
+
+
+return{
+
+signal,
+
+score,
+
+info:
+`Сила ${score}/100 • RSI ${rsiValue.toFixed(1)} • ATR ${volatility.toFixed(2)}% • 250 свечей`,
+
+factors
+
+};
+
+}
+
+
+/* =========================================================
+   SHOW SIGNAL
+========================================================= */
+
+function showSignal(index,result){
+
+const signal=
+document.getElementById(
+`signal-${index}`
+);
+
+const info=
+document.getElementById(
+`signal-info-${index}`
+);
+
+const factors=
+document.getElementById(
+`factors-${index}`
+);
+
+signal.textContent=
+result.signal;
+
+signal.className=
+"signal-main "+
+(
+result.signal==="BUY"
+?"signal-buy"
+:
+result.signal==="SELL"
+?"signal-sell"
+:"signal-wait"
+);
+
+info.textContent=
+result.info;
+
+factors.innerHTML=
+result.factors
+.map(f=>`
+
+<div class="factor ${f.type}">
+${f.text}
+</div>
+
+`)
+.join("");
 
 }
 
@@ -2639,121 +2731,111 @@ function showSignal(
 
 async function loadSignal(index){
 
-    const card =
-        cards[index];
+const card=
+cards[index];
+
+try{
+
+let candles;
+
+if(card.type==="forex"){
+
+candles=
+await getForexKlines(
+card.symbol,
+card.interval
+);
+
+}else{
+
+candles=
+await getCryptoKlines(
+card.symbol,
+card.interval
+);
+
+}
+
+if(!candles.length)
+throw new Error(
+"Нет свечей"
+);
 
 
-    try{
-
-        let candles;
-
-
-        if(card.type==="forex"){
-
-            candles =
-                await getForexKlines(
-                    card.symbol,
-                    card.interval
-                );
-
-        }
-        else{
-
-            candles =
-                await getCryptoKlines(
-                    card.symbol,
-                    card.interval
-                );
-
-        }
+const last=
+candles[candles.length-1];
 
 
-        if(!candles.length)
-            throw new Error(
-                "Нет свечей"
-            );
+document.getElementById(
+`price-${index}`
+).textContent=
+formatPrice(
+last.close,
+card.type
+);
 
 
-        const last =
-            candles[
-                candles.length-1
-            ];
+document.getElementById(
+`high-${index}`
+).textContent=
+formatPrice(
+last.high,
+card.type
+);
 
 
-        document.getElementById(
-            `price-${index}`
-        ).textContent =
-            formatPrice(
-                last.close,
-                card.type
-            );
+document.getElementById(
+`low-${index}`
+).textContent=
+formatPrice(
+last.low,
+card.type
+);
 
 
-        document.getElementById(
-            `high-${index}`
-        ).textContent =
-            formatPrice(
-                last.high,
-                card.type
-            );
+document.getElementById(
+`volume-${index}`
+).textContent=
+formatVolume(
+last.volume,
+card.type
+);
 
 
-        document.getElementById(
-            `low-${index}`
-        ).textContent =
-            formatPrice(
-                last.low,
-                card.type
-            );
+const result=
+calculateSignal(candles);
 
 
-        document.getElementById(
-            `volume-${index}`
-        ).textContent =
-            formatVolume(
-                last.volume,
-                card.type
-            );
+showSignal(
+index,
+result
+);
 
 
-        const result =
-            calculateSignal(
-                candles
-            );
+card.lastCandles=
+candles;
+
+card.lastResult=
+result;
+
+card.lastPrice=
+last.close;
 
 
-        showSignal(
-            index,
-            result
-        );
+}
+catch(e){
 
+document.getElementById(
+`signal-${index}`
+).textContent=
+"НЕТ ДАННЫХ";
 
-        card.lastCandles =
-            candles;
+document.getElementById(
+`signal-info-${index}`
+).textContent=
+e.message;
 
-
-        card.lastResult =
-            result;
-
-
-        card.lastPrice =
-            last.close;
-
-    }
-    catch(e){
-
-        document.getElementById(
-            `signal-${index}`
-        ).textContent =
-            "НЕТ ДАННЫХ";
-
-
-        document.getElementById(
-            `signal-info-${index}`
-        ).textContent =
-            e.message;
-
-    }
+}
 
 }
 
@@ -2764,109 +2846,93 @@ async function loadSignal(index){
 
 function loadTradingView(index){
 
-    const container =
-        document.getElementById(
-            `chart-${index}`
-        );
+const container=
+document.getElementById(
+`chart-${index}`
+);
+
+container.innerHTML="";
+
+const wrapper=
+document.createElement("div");
+
+wrapper.style.width="100%";
+wrapper.style.height="100%";
 
 
-    container.innerHTML="";
+const script=
+document.createElement("script");
+
+script.type=
+"text/javascript";
+
+script.src=
+"https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
+
+script.async=true;
 
 
-    const wrapper =
-        document.createElement(
-            "div"
-        );
+let tvSymbol;
+
+if(
+cards[index].type==="forex"
+){
+
+tvSymbol=
+"OANDA:"+
+cards[index]
+.symbol
+.replace("/","");
+
+}else{
+
+tvSymbol=
+"BINANCE:"+
+cards[index].symbol;
+
+}
 
 
-    wrapper.style.width="100%";
-    wrapper.style.height="100%";
+script.innerHTML=
+JSON.stringify({
+
+autosize:true,
+
+symbol:tvSymbol,
+
+interval:
+cards[index].interval,
+
+timezone:
+"Europe/Amsterdam",
+
+theme:"dark",
+
+style:"1",
+
+locale:"ru",
+
+enable_publishing:false,
+
+allow_symbol_change:true,
+
+hide_top_toolbar:false,
+
+hide_legend:false,
+
+save_image:false,
+
+calendar:false,
+
+support_host:
+"https://www.tradingview.com"
+
+});
 
 
-    const script =
-        document.createElement(
-            "script"
-        );
+wrapper.appendChild(script);
 
-
-    script.type="text/javascript";
-
-
-    script.src =
-        "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
-
-
-    script.async=true;
-
-
-    let tvSymbol;
-
-
-    if(
-        cards[index].type==="forex"
-    ){
-
-        tvSymbol =
-            "OANDA:"+
-            cards[index]
-                .symbol
-                .replace("/","");
-
-    }
-    else{
-
-        tvSymbol =
-            "BINANCE:"+
-            cards[index].symbol;
-
-    }
-
-
-    script.innerHTML =
-        JSON.stringify({
-
-            autosize:true,
-
-            symbol:tvSymbol,
-
-            interval:
-                cards[index].interval,
-
-            timezone:
-                "Europe/Amsterdam",
-
-            theme:"dark",
-
-            style:"1",
-
-            locale:"ru",
-
-            enable_publishing:false,
-
-            allow_symbol_change:true,
-
-            hide_top_toolbar:false,
-
-            hide_legend:false,
-
-            save_image:false,
-
-            calendar:false,
-
-            support_host:
-                "https://www.tradingview.com"
-
-        });
-
-
-    wrapper.appendChild(
-        script
-    );
-
-
-    container.appendChild(
-        wrapper
-    );
+container.appendChild(wrapper);
 
 }
 
@@ -2877,89 +2943,79 @@ function loadTradingView(index){
 
 async function changePair(index){
 
-    const input =
-        document.getElementById(
-            `input-${index}`
-        );
+const input=
+document.getElementById(
+`input-${index}`
+);
+
+const value=
+normalizeInput(
+input.value
+);
+
+if(!value)
+return;
 
 
-    const value =
-        normalizeInput(
-            input.value
-        );
+const forex=
+isForexSymbol(value);
+
+cards[index].type=
+forex
+?"forex"
+:"crypto";
+
+cards[index].symbol=
+forex
+?normalizeForex(value)
+:normalizeCrypto(value);
 
 
-    if(!value)
-        return;
+document.getElementById(
+`name-${index}`
+).textContent=
+forex
+?cards[index].symbol
+:cards[index].symbol.replace(
+"USDT",
+""
+);
 
 
-    const forex =
-        isForexSymbol(value);
+document.getElementById(
+`symbol-${index}`
+).textContent=
+cards[index].symbol;
 
 
-    cards[index].type =
-        forex
-            ?"forex"
-            :"crypto";
+const badge=
+document.getElementById(
+`market-${index}`
+);
+
+badge.textContent=
+forex
+?"FOREX"
+:"CRYPTO";
+
+badge.className=
+"market-badge"+
+(
+forex
+?" forex"
+:""
+);
 
 
-    cards[index].symbol =
-        forex
-            ?normalizeForex(value)
-            :normalizeCrypto(value);
+saveCards();
 
+resetCard(index);
 
-    document.getElementById(
-        `name-${index}`
-    ).textContent =
-        forex
-            ?cards[index].symbol
-            :cards[index].symbol.replace(
-                "USDT",
-                ""
-            );
+loadTradingView(index);
 
+await loadSignal(index);
 
-    document.getElementById(
-        `symbol-${index}`
-    ).textContent =
-        cards[index].symbol;
-
-
-    const badge =
-        document.getElementById(
-            `market-${index}`
-        );
-
-
-    badge.textContent =
-        forex
-            ?"FOREX"
-            :"CRYPTO";
-
-
-    badge.className =
-        "market-badge"+
-        (
-            forex
-                ?" forex"
-                :""
-        );
-
-
-    saveCards();
-
-
-    resetCard(index);
-
-
-    loadTradingView(index);
-
-
-    await loadSignal(index);
-
-
-    connectBinance();
+connectBinance();
 
 }
 
@@ -2969,260 +3025,253 @@ async function changePair(index){
 ========================================================= */
 
 async function changeTimeframe(
-    index,
-    interval,
-    button
+index,
+interval,
+button
 ){
 
-    cards[index].interval =
-        interval;
+cards[index].interval=
+interval;
 
 
-    const card =
-        document.getElementById(
-            `chart-${index}`
-        ).parentElement;
+const card=
+document.getElementById(
+`chart-${index}`
+).parentElement;
 
 
-    card.querySelectorAll(
-        ".timeframe"
-    ).forEach(
-        b=>b.classList.remove(
-            "active"
-        )
-    );
+card.querySelectorAll(
+".timeframe"
+)
+.forEach(
+b=>b.classList.remove(
+"active"
+)
+);
 
 
-    button.classList.add(
-        "active"
-    );
+button.classList.add(
+"active"
+);
 
 
-    loadTradingView(index);
+loadTradingView(index);
 
-
-    await loadSignal(index);
+await loadSignal(index);
 
 }
 
 
 /* =========================================================
-   RESET CARD
+   RESET
 ========================================================= */
 
 function resetCard(index){
 
-    [
-        "price",
-        "high",
-        "low",
-        "volume"
-    ].forEach(id=>{
+[
+"price",
+"high",
+"low",
+"volume"
+]
+.forEach(id=>{
 
-        document.getElementById(
-            `${id}-${index}`
-        ).textContent="---";
+document.getElementById(
+`${id}-${index}`
+).textContent=
+"---";
 
-    });
-
-
-    document.getElementById(
-        `signal-${index}`
-    ).textContent =
-        "АНАЛИЗ...";
+});
 
 
-    document.getElementById(
-        `signal-${index}`
-    ).className =
-        "signal-main signal-wait";
+document.getElementById(
+`signal-${index}`
+).textContent=
+"АНАЛИЗ...";
 
+document.getElementById(
+`signal-${index}`
+).className=
+"signal-main signal-wait";
 
-    document.getElementById(
-        `signal-info-${index}`
-    ).textContent =
-        "Получение данных...";
+document.getElementById(
+`signal-info-${index}`
+).textContent=
+"Получение 250 свечей...";
 
-
-    document.getElementById(
-        `factors-${index}`
-    ).innerHTML="";
+document.getElementById(
+`factors-${index}`
+).innerHTML="";
 
 }
 
 
 /* =========================================================
-   FORMAT
+   FORMAT PRICE
 ========================================================= */
 
 function formatPrice(
-    number,
-    type="crypto"
+number,
+type="crypto"
 ){
 
-    if(
-        number===undefined ||
-        number===null ||
-        isNaN(number)
-    )
-        return "---";
+if(
+number===undefined ||
+number===null ||
+isNaN(number)
+)
+return "---";
 
 
-    if(type==="forex"){
+if(type==="forex"){
 
-        return number.toLocaleString(
-            "en-US",
-            {
-                minimumFractionDigits:4,
-                maximumFractionDigits:5
-            }
-        );
-
-    }
-
-
-    return number.toLocaleString(
-        "en-US",
-        {
-            minimumFractionDigits:
-                number<1?4:2,
-
-            maximumFractionDigits:
-                number<1?8:2
-
-        }
-    )+" USDT";
+return number.toLocaleString(
+"en-US",
+{
+minimumFractionDigits:4,
+maximumFractionDigits:5
+}
+);
 
 }
 
 
-function formatVolume(
-    number,
-    type
-){
+return number.toLocaleString(
+"en-US",
+{
 
-    if(
-        !number ||
-        isNaN(number)
-    ){
+minimumFractionDigits:
+number<1?4:2,
 
-        return type==="forex"
-            ?"Tick volume"
-            :"---";
+maximumFractionDigits:
+number<1?8:2
 
-    }
-
-
-    if(number>=1000000000)
-
-        return (
-            number/1000000000
-        ).toFixed(2)+"B";
-
-
-    if(number>=1000000)
-
-        return (
-            number/1000000
-        ).toFixed(2)+"M";
-
-
-    if(number>=1000)
-
-        return (
-            number/1000
-        ).toFixed(2)+"K";
-
-
-    return number.toFixed(2);
+}
+)+" USDT";
 
 }
 
 
 /* =========================================================
-   PAGE SWITCH
+   FORMAT VOLUME
+========================================================= */
+
+function formatVolume(
+number,
+type
+){
+
+if(
+!number ||
+isNaN(number)
+){
+
+return type==="forex"
+?"Tick volume"
+:"---";
+
+}
+
+if(number>=1000000000)
+return(
+number/1000000000
+).toFixed(2)+"B";
+
+if(number>=1000000)
+return(
+number/1000000
+).toFixed(2)+"M";
+
+if(number>=1000)
+return(
+number/1000
+).toFixed(2)+"K";
+
+return number.toFixed(2);
+
+}
+
+
+/* =========================================================
+   PAGE
 ========================================================= */
 
 function showPage(page){
 
-    document
-        .getElementById("mainPage")
-        .classList.toggle(
-            "active",
-            page==="main"
-        );
+document
+.getElementById("mainPage")
+.classList.toggle(
+"active",
+page==="main"
+);
 
+document
+.getElementById("signalsPage")
+.classList.toggle(
+"active",
+page==="signals"
+);
 
-    document
-        .getElementById("signalsPage")
-        .classList.toggle(
-            "active",
-            page==="signals"
-        );
+document
+.getElementById("mainNav")
+.classList.toggle(
+"active",
+page==="main"
+);
 
-
-    document
-        .getElementById("mainNav")
-        .classList.toggle(
-            "active",
-            page==="main"
-        );
-
-
-    document
-        .getElementById("signalsNav")
-        .classList.toggle(
-            "active",
-            page==="signals"
-        );
+document
+.getElementById("signalsNav")
+.classList.toggle(
+"active",
+page==="signals"
+);
 
 }
 
 
 /* =========================================================
-   MONITOR STORAGE
+   MONITORS
 ========================================================= */
 
-const monitorStorageKey =
-    "cryptoScreenMonitors";
+const monitorStorageKey=
+"cryptoScreenMonitors";
+
+const tradeStorageKey=
+"cryptoScreenTrades";
 
 
-const tradeStorageKey =
-    "cryptoScreenTrades";
+let monitors=
+JSON.parse(
+localStorage.getItem(
+monitorStorageKey
+)
+)||[];
 
 
-let monitors =
-    JSON.parse(
-        localStorage.getItem(
-            monitorStorageKey
-        )
-    ) || [];
-
-
-let trades =
-    JSON.parse(
-        localStorage.getItem(
-            tradeStorageKey
-        )
-    ) || [];
+let trades=
+JSON.parse(
+localStorage.getItem(
+tradeStorageKey
+)
+)||[];
 
 
 function saveMonitors(){
 
-    localStorage.setItem(
-        monitorStorageKey,
-        JSON.stringify(monitors)
-    );
+localStorage.setItem(
+monitorStorageKey,
+JSON.stringify(monitors)
+);
 
 }
 
 
 function saveTrades(){
 
-    localStorage.setItem(
-        tradeStorageKey,
-        JSON.stringify(trades)
-    );
+localStorage.setItem(
+tradeStorageKey,
+JSON.stringify(trades)
+);
 
 }
 
@@ -3231,136 +3280,137 @@ function saveTrades(){
    MONITOR MODAL
 ========================================================= */
 
-let selectedTF =
-    "15";
+let selectedTF="15";
 
 
 document
-    .querySelectorAll(".tf-option")
-    .forEach(button=>{
+.querySelectorAll(".tf-option")
+.forEach(button=>{
 
-        button.onclick=()=>{
+button.onclick=()=>{
 
-            document
-                .querySelectorAll(
-                    ".tf-option"
-                )
-                .forEach(
-                    b=>b.classList.remove(
-                        "active"
-                    )
-                );
+document
+.querySelectorAll(".tf-option")
+.forEach(
+b=>b.classList.remove(
+"active"
+)
+);
 
+button.classList.add(
+"active"
+);
 
-            button.classList.add(
-                "active"
-            );
+selectedTF=
+button.dataset.tf;
 
+};
 
-            selectedTF =
-                button.dataset.tf;
-
-        };
-
-    });
+});
 
 
 function openMonitorModal(){
 
-    document
-        .getElementById(
-            "monitorModal"
-        )
-        .classList.add(
-            "open"
-        );
+document
+.getElementById(
+"monitorModal"
+)
+.classList.add(
+"open"
+);
 
 }
 
 
 function closeMonitorModal(){
 
-    document
-        .getElementById(
-            "monitorModal"
-        )
-        .classList.remove(
-            "open"
-        );
+document
+.getElementById(
+"monitorModal"
+)
+.classList.remove(
+"open"
+);
 
 }
 
 
+/* =========================================================
+   ADD MONITOR
+========================================================= */
+
 function addMonitor(){
 
-    const input =
-        document.getElementById(
-            "monitorInput"
-        );
+const input=
+document.getElementById(
+"monitorInput"
+);
+
+const value=
+normalizeInput(
+input.value
+);
+
+if(!value)
+return;
 
 
-    const value =
-        normalizeInput(
-            input.value
-        );
+const forex=
+isForexSymbol(value);
+
+const symbol=
+forex
+?normalizeForex(value)
+:normalizeCrypto(value);
 
 
-    if(!value)
-        return;
+const exists=
+monitors.some(
+m=>
+m.symbol===symbol &&
+m.interval===selectedTF
+);
 
 
-    const symbol =
-        isForexSymbol(value)
-            ?normalizeForex(value)
-            :normalizeCrypto(value);
+if(exists){
+
+closeMonitorModal();
+
+return;
+
+}
 
 
-    const exists =
-        monitors.some(
-            m=>
-                m.symbol===symbol &&
-                m.interval===selectedTF
-        );
+monitors.push({
+
+id:
+Date.now()+"_"+Math.random(),
+
+symbol,
+
+type:
+forex
+?"forex"
+:"crypto",
+
+interval:selectedTF,
+
+enabled:true,
+
+lastSignal:null,
+
+lastSignalTime:0
+
+});
 
 
-    if(exists){
+saveMonitors();
 
-        closeMonitorModal();
+input.value="";
 
-        return;
+closeMonitorModal();
 
-    }
-
-
-    monitors.push({
-
-        id:
-            Date.now()+"_"+Math.random(),
-
-        symbol,
-
-        type:
-            isForexSymbol(value)
-                ?"forex"
-                :"crypto",
-
-        interval:selectedTF,
-
-        enabled:true
-
-    });
-
-
-    saveMonitors();
-
-
-    input.value="";
-
-
-    closeMonitorModal();
-
-
-    renderMonitorBar();
+renderMonitorBar();
 
 }
 
@@ -3371,16 +3421,14 @@ function addMonitor(){
 
 function removeMonitor(id){
 
-    monitors =
-        monitors.filter(
-            m=>m.id!==id
-        );
+monitors=
+monitors.filter(
+m=>m.id!==id
+);
 
+saveMonitors();
 
-    saveMonitors();
-
-
-    renderMonitorBar();
+renderMonitorBar();
 
 }
 
@@ -3391,238 +3439,293 @@ function removeMonitor(id){
 
 function renderMonitorBar(){
 
-    const bar =
-        document.getElementById(
-            "monitorBar"
-        );
+const bar=
+document.getElementById(
+"monitorBar"
+);
+
+if(!monitors.length){
+
+bar.innerHTML=`
+
+<div class="monitor-chip">
+Нет пар в мониторинге
+</div>
+
+`;
+
+return;
+
+}
 
 
-    if(!monitors.length){
+bar.innerHTML=
+monitors
+.map(m=>`
 
-        bar.innerHTML =
-            `<div class="monitor-chip">
-                Нет пар в мониторинге
-            </div>`;
+<div class="monitor-chip">
 
-        return;
+${m.symbol}
+•
+${timeframeLabel(m.interval)}
 
-    }
+<button
+onclick="removeMonitor('${m.id}')">
+×
+</button>
 
+</div>
 
-    bar.innerHTML =
-        monitors
-            .map(
-                m=>`
-
-                    <div class="monitor-chip">
-
-                        ${m.symbol}
-                        •
-                        ${timeframeLabel(
-                            m.interval
-                        )}
-
-                        <button
-                            onclick="removeMonitor('${m.id}')">
-
-                            ×
-
-                        </button>
-
-                    </div>
-
-                `
-            )
-            .join("");
+`)
+.join("");
 
 }
 
 
 /* =========================================================
-   TRADE CREATION
+   CREATE TRADE
 ========================================================= */
 
 function createTrade(
-    monitor,
-    result,
-    price
+monitor,
+result,
+price
 ){
 
-    if(
-        result.signal!=="BUY" &&
-        result.signal!=="SELL"
-    )
-        return;
+if(
+result.signal!=="BUY" &&
+result.signal!=="SELL"
+)
+return;
 
 
-    const existing =
-        trades.find(
-            t=>
-                !t.closed &&
-                t.monitorId===monitor.id
-        );
+/*
+   Не создаём второй сигнал,
+   пока старый ещё открыт.
+*/
+
+const existing=
+trades.find(
+t=>
+!t.closed &&
+t.monitorId===monitor.id
+);
+
+if(existing)
+return;
 
 
-    if(existing)
-        return;
+/*
+   Дополнительный cooldown.
+*/
+
+const lastTrade=
+trades.find(
+t=>
+t.monitorId===monitor.id
+);
 
 
-    const duration =
-        timeframeMinutes(
-            monitor.interval
-        )*60*1000;
+if(
+lastTrade &&
+Date.now()-lastTrade.start
+<SIGNAL_COOLDOWN
+){
+
+return;
+
+}
 
 
-    const now =
-        Date.now();
+/*
+   Не открываем сделку,
+   если сигнал сменился слишком быстро.
+*/
+
+if(
+monitor.lastSignal===
+result.signal &&
+Date.now()-
+monitor.lastSignalTime
+<SIGNAL_COOLDOWN
+){
+
+return;
+
+}
 
 
-    const trade={
-
-        id:
-            now+"_"+Math.random(),
-
-        monitorId:
-            monitor.id,
-
-        symbol:
-            monitor.symbol,
-
-        type:
-            monitor.type,
-
-        interval:
-            monitor.interval,
-
-        direction:
-            result.signal,
-
-        score:
-            result.score,
-
-        entry:
-            price,
-
-        start:
-            now,
-
-        end:
-            now+duration,
-
-        closed:false,
-
-        exit:null,
-
-        result:null,
-
-        resultValue:null
-
-    };
+const duration=
+timeframeMinutes(
+monitor.interval
+)*60*1000;
 
 
-    trades.unshift(
-        trade
-    );
+const now=
+Date.now();
 
 
-    if(trades.length>500){
+const trade={
 
-        trades =
-            trades.slice(
-                0,
-                500
-            );
+id:
+now+"_"+Math.random(),
 
-    }
+monitorId:
+monitor.id,
+
+symbol:
+monitor.symbol,
+
+type:
+monitor.type,
+
+interval:
+monitor.interval,
+
+direction:
+result.signal,
+
+score:
+result.score,
+
+entry:
+price,
+
+current:
+price,
+
+start:
+now,
+
+end:
+now+duration,
+
+closed:false,
+
+exit:null,
+
+result:null,
+
+resultValue:null
+
+};
 
 
-    saveTrades();
+trades.unshift(trade);
+
+
+monitor.lastSignal=
+result.signal;
+
+monitor.lastSignalTime=
+now;
+
+
+if(trades.length>500){
+
+trades=
+trades.slice(0,500);
+
+}
+
+
+saveTrades();
+
+saveMonitors();
 
 }
 
 
 /* =========================================================
-   TRADE UPDATE
+   UPDATE MONITOR
 ========================================================= */
 
-async function updateMonitor(
-    monitor
+async function updateMonitor(monitor){
+
+try{
+
+let candles;
+
+if(
+monitor.type==="forex"
 ){
 
-    try{
+candles=
+await getForexKlines(
+monitor.symbol,
+monitor.interval
+);
 
-        let candles;
+}else{
 
+candles=
+await getCryptoKlines(
+monitor.symbol,
+monitor.interval
+);
 
-        if(
-            monitor.type==="forex"
-        ){
-
-            candles =
-                await getForexKlines(
-                    monitor.symbol,
-                    monitor.interval
-                );
-
-        }
-        else{
-
-            candles =
-                await getCryptoKlines(
-                    monitor.symbol,
-                    monitor.interval
-                );
-
-        }
+}
 
 
-        if(!candles.length)
-            return;
+if(!candles.length)
+return;
 
 
-        const last =
-            candles[
-                candles.length-1
-            ];
+const last=
+candles[candles.length-1];
 
 
-        const result =
-            calculateSignal(
-                candles
-            );
+const result=
+calculateSignal(candles);
 
 
-        createTrade(
-            monitor,
-            result,
-            last.close
-        );
+createTrade(
+monitor,
+result,
+last.close
+);
 
 
-        const openTrade =
-            trades.find(
-                t=>
-                    !t.closed &&
-                    t.monitorId===monitor.id
-            );
+const openTrade=
+trades.find(
+t=>
+!t.closed &&
+t.monitorId===monitor.id
+);
 
 
-        if(openTrade){
+if(openTrade){
 
-            openTrade.current =
-                last.close;
+openTrade.current=
+last.close;
 
-        }
+}
 
-    }
-    catch(e){
 
-        console.log(
-            "Monitor error:",
-            e
-        );
+/*
+   Запоминаем последнее состояние.
+*/
 
-    }
+monitor.lastPrice=
+last.close;
+
+monitor.lastScore=
+result.score;
+
+monitor.lastSignalDetected=
+result.signal;
+
+
+}
+catch(e){
+
+console.log(
+"Monitor error:",
+monitor.symbol,
+e
+);
+
+}
 
 }
 
@@ -3633,129 +3736,124 @@ async function updateMonitor(
 
 async function closeExpiredTrades(){
 
-    const now =
-        Date.now();
+const now=
+Date.now();
 
 
-    for(
-        const trade of trades
-    ){
+for(
+const trade of trades
+){
 
-        if(
-            trade.closed ||
-            now<trade.end
-        )
-            continue;
-
-
-        const monitor =
-            monitors.find(
-                m=>
-                    m.id===
-                    trade.monitorId
-            );
+if(
+trade.closed ||
+now<trade.end
+)
+continue;
 
 
-        if(!monitor)
-            continue;
+const monitor=
+monitors.find(
+m=>
+m.id===
+trade.monitorId
+);
 
 
-        try{
-
-            let candles;
-
-
-            if(
-                monitor.type==="forex"
-            ){
-
-                candles =
-                    await getForexKlines(
-                        monitor.symbol,
-                        monitor.interval
-                    );
-
-            }
-            else{
-
-                candles =
-                    await getCryptoKlines(
-                        monitor.symbol,
-                        monitor.interval
-                    );
-
-            }
+if(!monitor)
+continue;
 
 
-            if(!candles.length)
-                continue;
+try{
+
+let candles;
+
+if(
+monitor.type==="forex"
+){
+
+candles=
+await getForexKlines(
+monitor.symbol,
+monitor.interval
+);
+
+}else{
+
+candles=
+await getCryptoKlines(
+monitor.symbol,
+monitor.interval
+);
+
+}
 
 
-            const exit =
-                candles[
-                    candles.length-1
-                ].close;
+if(!candles.length)
+continue;
 
 
-            trade.exit =
-                exit;
+const exit=
+candles[
+candles.length-1
+].close;
 
 
-            const difference =
-                trade.direction==="BUY"
-
-                    ?exit-trade.entry
-
-                    :trade.entry-exit;
+trade.exit=
+exit;
 
 
-            trade.resultValue =
-                difference;
+const difference=
+trade.direction==="BUY"
+?exit-trade.entry
+:trade.entry-exit;
 
 
-            if(
-                Math.abs(
-                    difference
-                ) < 1e-12
-            ){
-
-                trade.result =
-                    "FLAT";
-
-            }
-            else if(
-                difference>0
-            ){
-
-                trade.result =
-                    "WIN";
-
-            }
-            else{
-
-                trade.result =
-                    "LOSS";
-
-            }
+trade.resultValue=
+difference;
 
 
-            trade.closed=true;
+if(
+Math.abs(difference)
+<
+Math.max(
+Math.abs(trade.entry)*0.000001,
+1e-12
+)
+){
+
+trade.result="FLAT";
+
+}
+else if(
+difference>0
+){
+
+trade.result="WIN";
+
+}
+else{
+
+trade.result="LOSS";
+
+}
 
 
-            trade.current =
-                exit;
+trade.closed=true;
 
-        }
-        catch(e){
+trade.current=
+exit;
 
-            console.log(e);
+}
+catch(e){
 
-        }
+console.log(e);
 
-    }
+}
+
+}
 
 
-    saveTrades();
+saveTrades();
 
 }
 
@@ -3765,249 +3863,244 @@ async function closeExpiredTrades(){
 ========================================================= */
 
 function renderTrade(
-    trade,
-    open
+trade,
+open
 ){
 
-    const directionClass =
-        trade.direction==="BUY"
-            ?"buy"
-            :"sell";
+const directionClass=
+trade.direction==="BUY"
+?"buy"
+:"sell";
 
 
-    const directionIcon =
-        trade.direction==="BUY"
-            ?"🟢"
-            :"🔴";
+const directionIcon=
+trade.direction==="BUY"
+?"🟢"
+:"🔴";
 
 
-    const current =
-        trade.current ??
-        trade.entry;
+const current=
+trade.current ??
+trade.entry;
 
 
-    const difference =
-        trade.direction==="BUY"
+const difference=
+trade.direction==="BUY"
+?current-trade.entry
+:trade.entry-current;
 
-            ?current-trade.entry
 
-            :trade.entry-current;
+if(open){
 
+const total=
+trade.end-
+trade.start;
 
-    if(open){
 
-        const total =
-            trade.end-
-            trade.start;
+const remaining=
+Math.max(
+0,
+trade.end-
+Date.now()
+);
 
 
-        const remaining =
-            Math.max(
-                0,
-                trade.end-
-                Date.now()
-            );
+const progress=
+Math.max(
+0,
+Math.min(
+100,
+(
+1-
+remaining/total
+)*100
+)
+);
 
 
-        const progress =
-            Math.max(
-                0,
-                Math.min(
-                    100,
-                    (
-                        1-
-                        remaining/total
-                    )*100
-                )
-            );
+return `
 
+<div class="signal-item">
 
-        return `
+<div class="signal-item-top">
 
-            <div class="signal-item">
+<div class="signal-pair">
 
-                <div class="signal-item-top">
+${directionIcon}
+${trade.symbol}
+•
+${timeframeLabel(
+trade.interval
+)}
 
-                    <div class="signal-pair">
+</div>
 
-                        ${directionIcon}
-                        ${trade.symbol}
-                        •
-                        ${timeframeLabel(
-                            trade.interval
-                        )}
+<div
+class="signal-direction ${directionClass}">
 
-                    </div>
+${trade.direction}
 
+</div>
 
-                    <div
-                        class="signal-direction ${directionClass}">
+</div>
 
-                        ${trade.direction}
 
-                    </div>
+<div class="signal-price">
 
-                </div>
+${formatTradePrice(
+trade.entry,
+trade.type
+)}
 
+→
 
-                <div class="signal-price">
+${formatTradePrice(
+current,
+trade.type
+)}
 
-                    ${formatTradePrice(
-                        trade.entry,
-                        trade.type
-                    )}
+</div>
 
-                    →
 
-                    ${formatTradePrice(
-                        current,
-                        trade.type
-                    )}
+<div class="signal-meta">
 
-                </div>
+<span>
+Score ${trade.score}/100
+</span>
 
+<span>
+${formatRemaining(
+remaining
+)}
+</span>
 
-                <div class="signal-meta">
+</div>
 
-                    <span>
-                        Score ${trade.score}/100
-                    </span>
 
-                    <span>
+<div class="progress">
 
-                        ${formatRemaining(
-                            remaining
-                        )}
+<div
+class="progress-inner"
+style="width:${progress}%">
+</div>
 
-                    </span>
+</div>
 
-                </div>
+</div>
 
+`;
 
-                <div class="progress">
+}
 
-                    <div
-                        class="progress-inner"
-                        style="width:${progress}%">
-                    </div>
 
-                </div>
+const resultClass=
+trade.result==="WIN"
+?"win"
+:
+trade.result==="LOSS"
+?"loss"
+:"flat";
 
-            </div>
 
-        `;
+const resultText=
+trade.result==="WIN"
+?"ПРИБЫЛЬ"
+:
+trade.result==="LOSS"
+?"УБЫТОК"
+:"FLAT";
 
-    }
 
+const sign=
+difference>0
+?"+"
+:"";
 
-    const resultClass =
-        trade.result==="WIN"
-            ?"win"
-            :trade.result==="LOSS"
-                ?"loss"
-                :"flat";
 
+return `
 
-    const resultText =
-        trade.result==="WIN"
-            ?"ПРИБЫЛЬ"
-            :trade.result==="LOSS"
-                ?"УБЫТОК"
-                :"FLAT";
+<div class="signal-item">
 
+<div class="signal-item-top">
 
-    const sign =
-        difference>0
-            ?"+"
-            :"";
+<div class="signal-pair">
 
+${directionIcon}
+${trade.symbol}
+•
+${timeframeLabel(
+trade.interval
+)}
 
-    return `
+</div>
 
-        <div class="signal-item">
+<div
+class="signal-direction ${directionClass}">
 
-            <div class="signal-item-top">
+${trade.direction}
 
-                <div class="signal-pair">
+</div>
 
-                    ${directionIcon}
-                    ${trade.symbol}
-                    •
-                    ${timeframeLabel(
-                        trade.interval
-                    )}
+</div>
 
-                </div>
 
+<div class="signal-price">
 
-                <div
-                    class="signal-direction ${directionClass}">
+${formatTradePrice(
+trade.entry,
+trade.type
+)}
 
-                    ${trade.direction}
+→
 
-                </div>
+${formatTradePrice(
+trade.exit,
+trade.type
+)}
 
-            </div>
+</div>
 
 
-            <div class="signal-price">
+<div class="signal-meta">
 
-                ${formatTradePrice(
-                    trade.entry,
-                    trade.type
-                )}
+<span>
+Score ${trade.score}/100
+</span>
 
-                →
+<span>
+${new Date(
+trade.start
+).toLocaleTimeString(
+"ru-RU",
+{
+hour:"2-digit",
+minute:"2-digit"
+}
+)}
+</span>
 
-                ${formatTradePrice(
-                    trade.exit,
-                    trade.type
-                )}
+</div>
 
-            </div>
 
+<div class="result ${resultClass}">
 
-            <div class="signal-meta">
+${resultText}
 
-                <span>
-                    Score ${trade.score}/100
-                </span>
+${
+trade.result==="FLAT"
+?""
+:
+` ${sign}${formatDifference(
+difference,
+trade.type
+)}`
+}
 
-                <span>
+</div>
 
-                    ${new Date(
-                        trade.start
-                    ).toLocaleTimeString(
-                        "ru-RU",
-                        {
-                            hour:"2-digit",
-                            minute:"2-digit"
-                        }
-                    )}
+</div>
 
-                </span>
-
-            </div>
-
-
-            <div class="result ${resultClass}">
-
-                ${resultText}
-
-                ${
-                    trade.result==="FLAT"
-                        ?""
-                        :` ${sign}${formatDifference(
-                            difference,
-                            trade.type
-                        )}`
-                }
-
-            </div>
-
-        </div>
-
-    `;
+`;
 
 }
 
@@ -4018,75 +4111,65 @@ function renderTrade(
 
 function renderSignals(){
 
-    const open =
-        trades.filter(
-            t=>!t.closed
-        );
+const open=
+trades.filter(
+t=>!t.closed
+);
 
 
-    const closed =
-        trades.filter(
-            t=>t.closed
-        );
+const closed=
+trades.filter(
+t=>t.closed
+);
 
 
-    document.getElementById(
-        "openSignals"
-    ).innerHTML =
+document.getElementById(
+"openSignals"
+).innerHTML=
 
-        open.length
+open.length
 
-            ?open
-                .slice(0,100)
-                .map(
-                    t=>
-                        renderTrade(
-                            t,
-                            true
-                        )
-                )
-                .join("")
+?open
+.slice(0,100)
+.map(
+t=>
+renderTrade(t,true)
+)
+.join("")
 
-            :`
+:
 
-                <div class="empty">
-
-                    Нет открытых сигналов
-
-                </div>
-
-            `;
+`
+<div class="empty">
+Нет открытых сигналов
+</div>
+`;
 
 
-    document.getElementById(
-        "closedSignals"
-    ).innerHTML =
+document.getElementById(
+"closedSignals"
+).innerHTML=
 
-        closed.length
+closed.length
 
-            ?closed
-                .slice(0,100)
-                .map(
-                    t=>
-                        renderTrade(
-                            t,
-                            false
-                        )
-                )
-                .join("")
+?closed
+.slice(0,100)
+.map(
+t=>
+renderTrade(t,false)
+)
+.join("")
 
-            :`
+:
 
-                <div class="empty">
-
-                    История пуста
-
-                </div>
-
-            `;
+`
+<div class="empty">
+История пуста
+</div>
+`;
 
 
-    updateStatistics();
+updateStatistics();
 
 }
 
@@ -4097,199 +4180,198 @@ function renderSignals(){
 
 function updateStatistics(){
 
-    const open =
-        trades.filter(
-            t=>!t.closed
-        ).length;
+const open=
+trades.filter(
+t=>!t.closed
+).length;
 
 
-    const win =
-        trades.filter(
-            t=>
-                t.closed &&
-                t.result==="WIN"
-        ).length;
+const win=
+trades.filter(
+t=>
+t.closed &&
+t.result==="WIN"
+).length;
 
 
-    const loss =
-        trades.filter(
-            t=>
-                t.closed &&
-                t.result==="LOSS"
-        ).length;
+const loss=
+trades.filter(
+t=>
+t.closed &&
+t.result==="LOSS"
+).length;
 
 
-    const flat =
-        trades.filter(
-            t=>
-                t.closed &&
-                t.result==="FLAT"
-        ).length;
+const flat=
+trades.filter(
+t=>
+t.closed &&
+t.result==="FLAT"
+).length;
 
 
-    const completed =
-        win+
-        loss;
+const completed=
+win+loss;
 
 
-    const winrate =
-        completed
-
-            ?Math.round(
-                win/completed*100
-            )
-
-            :0;
+const winrate=
+completed
+?Math.round(
+win/completed*100
+)
+:0;
 
 
-    document.getElementById(
-        "statsOpen"
-    ).textContent =
-        "Открыто: "+open;
+document.getElementById(
+"statsOpen"
+).textContent=
+"Открыто: "+open;
 
 
-    document.getElementById(
-        "statsWin"
-    ).textContent =
-        "✅ "+win;
+document.getElementById(
+"statsWin"
+).textContent=
+"✅ "+win;
 
 
-    document.getElementById(
-        "statsLoss"
-    ).textContent =
-        "❌ "+loss;
+document.getElementById(
+"statsLoss"
+).textContent=
+"❌ "+loss;
 
 
-    document.getElementById(
-        "statsFlat"
-    ).textContent =
-        "⚪ "+flat;
+document.getElementById(
+"statsFlat"
+).textContent=
+"⚪ "+flat;
 
 
-    document.getElementById(
-        "statsWinrate"
-    ).textContent =
-        "Win Rate: "+winrate+"%";
+document.getElementById(
+"statsWinrate"
+).textContent=
+"Win Rate: "+winrate+"%";
 
 }
 
 
 /* =========================================================
-   FORMATTING TRADES
+   FORMAT TRADE PRICE
 ========================================================= */
 
 function formatTradePrice(
-    value,
-    type
+value,
+type
 ){
 
-    if(
-        value===undefined ||
-        value===null ||
-        isNaN(value)
-    )
-        return "---";
+if(
+value===undefined ||
+value===null ||
+isNaN(value)
+)
+return "---";
 
 
-    if(type==="forex"){
+if(type==="forex"){
 
-        return Number(value)
-            .toFixed(5);
-
-    }
-
-
-    if(value<1)
-
-        return Number(value)
-            .toFixed(6);
-
-
-    return Number(value)
-        .toFixed(2);
+return Number(value)
+.toFixed(5);
 
 }
 
+
+if(value<1){
+
+return Number(value)
+.toFixed(6);
+
+}
+
+
+return Number(value)
+.toFixed(2);
+
+}
+
+
+/* =========================================================
+   FORMAT DIFFERENCE
+========================================================= */
 
 function formatDifference(
-    value,
-    type
+value,
+type
 ){
 
-    const abs =
-        Math.abs(value);
+const abs=
+Math.abs(value);
 
+if(type==="forex")
+return abs.toFixed(5);
 
-    if(type==="forex")
-        return abs.toFixed(5);
+if(abs<1)
+return abs.toFixed(4);
 
-
-    if(abs<1)
-        return abs.toFixed(4);
-
-
-    return abs.toFixed(2);
+return abs.toFixed(2);
 
 }
 
+
+/* =========================================================
+   REMAINING
+========================================================= */
 
 function formatRemaining(ms){
 
-    const total =
-        Math.ceil(
-            ms/1000
-        );
+const total=
+Math.max(
+0,
+Math.ceil(ms/1000)
+);
 
 
-    const hours =
-        Math.floor(
-            total/3600
-        );
+const hours=
+Math.floor(
+total/3600
+);
 
 
-    const minutes =
-        Math.floor(
-            (total%3600)/60
-        );
+const minutes=
+Math.floor(
+(total%3600)/60
+);
 
 
-    const seconds =
-        total%60;
+const seconds=
+total%60;
 
 
-    if(hours>0){
+if(hours>0){
 
-        return (
+return(
 
-            String(hours)
-                .padStart(2,"0")+
+String(hours)
+.padStart(2,"0")+
+":"+
+String(minutes)
+.padStart(2,"0")+
+":"+
+String(seconds)
+.padStart(2,"0")
 
-            ":"+
+);
 
-            String(minutes)
-                .padStart(2,"0")+
-
-            ":"+
-
-            String(seconds)
-                .padStart(2,"0")
-
-        );
-
-    }
+}
 
 
-    return (
+return(
 
-        String(minutes)
-            .padStart(2,"0")+
+String(minutes)
+.padStart(2,"0")+
+":"+
+String(seconds)
+.padStart(2,"0")
 
-        ":"+
-
-        String(seconds)
-            .padStart(2,"0")
-
-    );
+);
 
 }
 
@@ -4303,49 +4385,61 @@ let monitorBusy=false;
 
 async function monitorLoop(){
 
-    if(monitorBusy)
-        return;
+if(monitorBusy)
+return;
 
 
-    monitorBusy=true;
+monitorBusy=true;
 
 
-    try{
+try{
 
-        await closeExpiredTrades();
+/*
+   Сначала закрываем всё,
+   чему уже пришло время.
+*/
 
-
-        for(
-            const monitor of monitors
-        ){
-
-            if(!monitor.enabled)
-                continue;
+await closeExpiredTrades();
 
 
-            await updateMonitor(
-                monitor
-            );
+/*
+   Затем обновляем мониторинг.
+*/
 
-        }
+for(
+const monitor of monitors
+){
+
+if(
+!monitor.enabled
+)
+continue;
 
 
-        saveTrades();
+await updateMonitor(
+monitor
+);
+
+}
 
 
-        renderSignals();
+saveTrades();
 
-    }
-    catch(e){
+saveMonitors();
 
-        console.log(e);
+renderSignals();
 
-    }
-    finally{
+}
+catch(e){
 
-        monitorBusy=false;
+console.log(e);
 
-    }
+}
+finally{
+
+monitorBusy=false;
+
+}
 
 }
 
@@ -4357,89 +4451,91 @@ async function monitorLoop(){
 createCards();
 
 
-/* Графики */
+/*
+   Загружаем графики.
+*/
 
 for(
-    let i=0;
-    i<defaultCoins.length;
-    i++
+let i=0;
+i<defaultCoins.length;
+i++
 ){
 
-    loadTradingView(i);
+loadTradingView(i);
 
 }
 
 
-/* Первичный анализ */
+/*
+   Первый анализ.
+*/
 
 for(
-    let i=0;
-    i<defaultCoins.length;
-    i++
+let i=0;
+i<defaultCoins.length;
+i++
 ){
 
-    loadSignal(i);
+loadSignal(i);
 
 }
 
 
-/* Binance */
+/*
+   Binance real-time.
+*/
 
 connectBinance();
 
 
-/* Monitoring UI */
+/*
+   Мониторинг.
+*/
 
 renderMonitorBar();
 
 renderSignals();
 
 
-/*
-    Проверяем мониторинг примерно
-    раз в 15 секунд.
-
-    Таймер интерфейса обновляется
-    каждую секунду.
-*/
-
 monitorLoop();
 
 
+/*
+   Теперь мониторинг проверяется
+   чаще — каждые 5 секунд.
+*/
+
 setInterval(
-    monitorLoop,
-    15000
+monitorLoop,
+MONITOR_INTERVAL
 );
 
 
+/*
+   Таймер открытых сделок.
+*/
+
 setInterval(
-    renderSignals,
-    1000
+renderSignals,
+1000
 );
 
 
 /* =========================================================
-   ВОССТАНОВЛЕНИЕ СОСТОЯНИЯ
+   ВОССТАНОВЛЕНИЕ
 ========================================================= */
 
-/*
-    Если пользователь закрыл страницу
-    и вернулся позже, старые сделки
-    остаются в localStorage.
-
-    Просроченные сделки будут закрыты
-    при следующем запуске.
-*/
-
 window.addEventListener(
-    "beforeunload",
-    ()=>{
+"beforeunload",
+()=>{
 
-        saveCards();
-        saveMonitors();
-        saveTrades();
+saveCards();
 
-    }
+saveMonitors();
+
+saveTrades();
+
+}
 );
 
 </script>
