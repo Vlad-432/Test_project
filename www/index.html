@@ -2049,120 +2049,81 @@ trade.current=price;
 
 
 /* =========================================================
-   FINNHUB — СВЕЧИ ДЛЯ СИГНАЛА
+   TWELVE DATA — СВЕЧИ ДЛЯ СИГНАЛА
+
+   Live-цену для входа/сопровождения сделки даёт Finnhub
+   (см. выше), а вот сами свечи для расчёта сигнала —
+   отсюда: у Twelve Data бесплатный тариф их отдаёт без
+   проблем, просто с лимитом 8 запросов в минуту.
+
+   Чтобы не словить 429/бан по лимиту, ВСЕ запросы к
+   Twelve Data идут через единую очередь с гарантированным
+   интервалом между вызовами — независимо от того, сколько
+   мониторов/карточек одновременно просят данные.
 ========================================================= */
 
-function finnhubResolution(interval){
+const TWELVE_DATA_API_KEY =
+"c41ad6d74c4d4c22ac1a20312e9246a7";
 
-const map={
+const TWELVE_DATA_MIN_GAP = 8000;
 
-"1":"1",
-"5":"5",
-"15":"15",
-"30":"30",
-"60":"60",
-"240":"60",
-"D":"D"
+let twelveDataQueue =
+Promise.resolve();
+
+let twelveDataLastCall = 0;
+
+
+function scheduleTwelveDataCall(fn){
+
+const run=
+async ()=>{
+
+const wait=
+Math.max(
+0,
+TWELVE_DATA_MIN_GAP-
+(Date.now()-twelveDataLastCall)
+);
+
+if(wait>0){
+
+await delay(wait);
+
+}
+
+twelveDataLastCall=
+Date.now();
+
+return fn();
 
 };
 
-return map[interval] || "5";
+const result=
+twelveDataQueue.then(run,run);
+
+twelveDataQueue=
+result.catch(()=>{});
+
+return result;
 
 }
 
 
-function intervalSeconds(interval){
+function twelveInterval(interval){
 
 const map={
 
-"1":60,
-"5":300,
-"15":900,
-"30":1800,
-"60":3600,
-"240":14400,
-"D":86400
+"1":"1min",
+"5":"5min",
+"15":"15min",
+"30":"30min",
+"60":"1h",
+"240":"4h",
+"D":"1day"
 
 };
 
-return map[interval] || 300;
-
-}
-
-
-function parseFinnhubCandles(json){
-
-if(
-json.s!=="ok" ||
-!json.t ||
-!json.t.length
-)
-return [];
-
-const out=[];
-
-for(
-let i=0;
-i<json.t.length;
-i++
-){
-
-out.push({
-
-time:json.t[i]*1000,
-open:json.o[i],
-high:json.h[i],
-low:json.l[i],
-close:json.c[i],
-volume:json.v ? (json.v[i]||0) : 0
-
-});
-
-}
-
-return out;
-
-}
-
-
-/*
-   Finnhub не отдаёт готовые 4-часовые свечи —
-   собираем их сами из часовых (по 4 штуки в одну).
-*/
-
-function aggregateCandles(candles,groupSize){
-
-const out=[];
-
-for(
-let i=0;
-i<candles.length;
-i+=groupSize
-){
-
-const group=
-candles.slice(i,i+groupSize);
-
-if(!group.length)
-continue;
-
-out.push({
-
-time:group[0].time,
-open:group[0].open,
-high:Math.max(...group.map(c=>c.high)),
-low:Math.min(...group.map(c=>c.low)),
-close:group[group.length-1].close,
-volume:group.reduce(
-(sum,c)=>sum+(c.volume||0),
-0
-)
-
-});
-
-}
-
-return out;
+return map[interval] || "5min";
 
 }
 
@@ -2172,50 +2133,22 @@ symbol,
 interval
 ){
 
-if(!finnhubReady()){
+return scheduleTwelveDataCall(
+async ()=>{
 
-throw new Error(
-"Не указан API-ключ Finnhub"
-);
-
-}
-
-const needsAggregation=
-interval==="240";
-
-const fetchInterval=
-needsAggregation
-?"60"
-:interval;
-
-const secondsPer=
-intervalSeconds(fetchInterval);
-
-const count=
-needsAggregation
-?ANALYSIS_CANDLES*4
-:ANALYSIS_CANDLES;
-
-const to=
-Math.floor(Date.now()/1000);
-
-const from=
-to-(count*secondsPer);
-
+const pair=
+normalizeForex(symbol);
 
 const url=
-"https://finnhub.io/api/v1/forex/candle"+
+"https://api.twelvedata.com/time_series"+
 "?symbol="+
-encodeURIComponent(
-toFinnhubSymbol(symbol)
-)+
-"&resolution="+
-finnhubResolution(fetchInterval)+
-"&from="+from+
-"&to="+to+
-"&token="+
-encodeURIComponent(FINNHUB_API_KEY);
-
+encodeURIComponent(pair)+
+"&interval="+
+twelveInterval(interval)+
+"&outputsize="+
+ANALYSIS_CANDLES+
+"&apikey="+
+encodeURIComponent(TWELVE_DATA_API_KEY);
 
 const response=
 await fetchWithRetry(url);
@@ -2223,25 +2156,40 @@ await fetchWithRetry(url);
 const json=
 await response.json();
 
-let candles=
-parseFinnhubCandles(json);
-
-if(!candles.length){
+if(
+json.status==="error" ||
+!json.values ||
+!json.values.length
+){
 
 throw new Error(
+(json.message)||
 "Forex-пара не найдена"
 );
 
 }
 
-if(needsAggregation){
+return json.values
+.slice()
+.reverse()
+.map(v=>({
 
-candles=
-aggregateCandles(candles,4);
+time:
+new Date(v.datetime).getTime(),
+
+open:parseFloat(v.open),
+high:parseFloat(v.high),
+low:parseFloat(v.low),
+close:parseFloat(v.close),
+volume:
+v.volume
+?parseFloat(v.volume)
+:0
+
+}));
 
 }
-
-return candles;
+);
 
 }
 
