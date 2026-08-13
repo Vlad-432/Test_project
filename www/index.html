@@ -88,7 +88,10 @@ header{
 
 .page.active{display:block}
 
-.main-page{padding:12px}
+.main-page{
+    padding:12px;
+    height:100%;
+}
 
 .main-title{
     height:42px;
@@ -326,13 +329,39 @@ header{
     margin-top:4px;
 }
 
+
+/* =========================================================
+   ГРАФИК
+========================================================= */
+
 .chart{
-    flex:1;
-    min-height:0;
+    flex:1 1 auto;
+    min-height:280px;
     width:100%;
     border-top:1px solid #232a35;
     background:#0b0e13;
+    overflow:hidden;
+    position:relative;
 }
+
+.chart > div{
+    width:100% !important;
+    height:100% !important;
+    min-height:280px;
+}
+
+.chart iframe{
+    width:100% !important;
+    height:100% !important;
+    min-height:280px;
+    display:block;
+    border:0;
+}
+
+
+/* =========================================================
+   SIGNALS
+========================================================= */
 
 .signals-page{
     padding:10px;
@@ -512,6 +541,11 @@ header{
     font-size:9px;
 }
 
+
+/* =========================================================
+   MODAL
+========================================================= */
+
 .modal{
     position:fixed;
     inset:0;
@@ -593,7 +627,13 @@ header{
     font-weight:900;
 }
 
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
 @media(max-width:700px){
+
     .cards-grid{
         grid-template-columns:1fr;
     }
@@ -609,13 +649,24 @@ header{
     .price{
         font-size:20px;
     }
+
+    .chart{
+        min-height:300px;
+    }
+
+    .chart > div,
+    .chart iframe{
+        min-height:300px;
+    }
 }
+
 </style>
 </head>
 
 <body>
 
 <header>
+
 <div class="header-inner">
 
 <div class="logo">
@@ -628,13 +679,15 @@ Crypto<span>Screen</span>
 ● Подключение...
 </div>
 
-<button class="nav-btn active"
+<button
+class="nav-btn active"
 id="mainNav"
 onclick="showPage('main')">
 Графики
 </button>
 
-<button class="nav-btn"
+<button
+class="nav-btn"
 id="signalsNav"
 onclick="showPage('signals')">
 Сигналы
@@ -642,31 +695,46 @@ onclick="showPage('signals')">
 
 </div>
 </div>
+
 </header>
+
 
 <div class="app">
 
-<section class="page active" id="mainPage">
+<section
+class="page active"
+id="mainPage">
 
 <div class="main-page">
 
 <div class="main-title">
 
 <div>
+
 <h1>Крипто-скринер</h1>
-<p>Crypto + Forex • графики • анализ • сигналы</p>
-</div>
+
+<p>
+Crypto + Forex • графики • анализ • сигналы
+</p>
 
 </div>
 
-<div class="cards-grid" id="grid"></div>
+</div>
+
+
+<div
+class="cards-grid"
+id="grid">
+</div>
 
 </div>
 
 </section>
 
 
-<section class="page" id="signalsPage">
+<section
+class="page"
+id="signalsPage">
 
 <div class="signals-page">
 
@@ -676,24 +744,45 @@ onclick="showPage('signals')">
 📊 Сигналы
 </div>
 
-<button class="add-monitor"
+<button
+class="add-monitor"
 onclick="openMonitorModal()">
 ＋ ДОБАВИТЬ
 </button>
 
 </div>
 
-<div class="monitor-bar" id="monitorBar"></div>
+
+<div
+class="monitor-bar"
+id="monitorBar">
+</div>
+
 
 <div class="stats-line">
 
-<span id="statsOpen">Открыто: 0</span>
-<span id="statsWin">✅ 0</span>
-<span id="statsLoss">❌ 0</span>
-<span id="statsFlat">⚪ 0</span>
-<span id="statsWinrate">Win Rate: 0%</span>
+<span id="statsOpen">
+Открыто: 0
+</span>
+
+<span id="statsWin">
+✅ 0
+</span>
+
+<span id="statsLoss">
+❌ 0
+</span>
+
+<span id="statsFlat">
+⚪ 0
+</span>
+
+<span id="statsWinrate">
+Win Rate: 0%
+</span>
 
 </div>
+
 
 <div class="signals-columns">
 
@@ -703,7 +792,8 @@ onclick="openMonitorModal()">
 🟢 ОТКРЫТЫЕ
 </div>
 
-<div class="signal-list"
+<div
+class="signal-list"
 id="openSignals">
 </div>
 
@@ -716,7 +806,8 @@ id="openSignals">
 📁 ЗАВЕРШЁННЫЕ
 </div>
 
-<div class="signal-list"
+<div
+class="signal-list"
 id="closedSignals">
 </div>
 
@@ -731,7 +822,9 @@ id="closedSignals">
 </div>
 
 
-<div class="modal" id="monitorModal">
+<div
+class="modal"
+id="monitorModal">
 
 <div class="modal-box">
 
@@ -745,30 +838,54 @@ id="monitorInput"
 placeholder="BTCUSDT / AUDCAD / EURUSD"
 >
 
-<div class="tf-select" id="tfSelect">
+<div
+class="tf-select"
+id="tfSelect">
 
-<button class="tf-option"
-data-tf="1">1м</button>
+<button
+class="tf-option"
+data-tf="1">
+1м
+</button>
 
-<button class="tf-option"
-data-tf="5">5м</button>
+<button
+class="tf-option"
+data-tf="5">
+5м
+</button>
 
-<button class="tf-option active"
-data-tf="15">15м</button>
+<button
+class="tf-option active"
+data-tf="15">
+15м
+</button>
 
-<button class="tf-option"
-data-tf="30">30м</button>
+<button
+class="tf-option"
+data-tf="30">
+30м
+</button>
 
-<button class="tf-option"
-data-tf="60">1ч</button>
+<button
+class="tf-option"
+data-tf="60">
+1ч
+</button>
 
-<button class="tf-option"
-data-tf="240">4ч</button>
+<button
+class="tf-option"
+data-tf="240">
+4ч
+</button>
 
-<button class="tf-option"
-data-tf="D">1д</button>
+<button
+class="tf-option"
+data-tf="D">
+1д
+</button>
 
 </div>
+
 
 <div class="modal-actions">
 
@@ -776,7 +893,8 @@ data-tf="D">1д</button>
 Отмена
 </button>
 
-<button class="save"
+<button
+class="save"
 onclick="addMonitor()">
 Добавить
 </button>
@@ -799,33 +917,23 @@ const TWELVE_DATA_API_KEY =
 
 
 /* =========================================================
-   НАСТРОЙКИ АНАЛИЗА
+   НАСТРОЙКИ
 ========================================================= */
 
 const ANALYSIS_CANDLES = 250;
 
-/*
-   Сигнал теперь появляется только если
-   оценка >= 75 для BUY
-   или <= 25 для SELL.
-*/
-
 const MIN_SIGNAL_SCORE = 75;
-
-/*
-   Минимальная пауза между одинаковыми
-   сигналами для одной пары + ТФ.
-*/
 
 const SIGNAL_COOLDOWN = 10 * 60 * 1000;
 
+const MONITOR_INTERVAL = 5000;
+
 
 /*
-   Минимальный интервал проверки.
-   5 секунд вместо старых 15.
+   Защита от повторного открытия
+   одного и того же сигнала.
 */
-
-const MONITOR_INTERVAL = 5000;
+const SAME_SIGNAL_BLOCK = true;
 
 
 /* =========================================================
@@ -995,6 +1103,26 @@ JSON.stringify(symbols)
 }
 
 
+function saveMonitors(){
+
+localStorage.setItem(
+"cryptoScreenMonitors",
+JSON.stringify(monitors)
+);
+
+}
+
+
+function saveTrades(){
+
+localStorage.setItem(
+"cryptoScreenTrades",
+JSON.stringify(trades)
+);
+
+}
+
+
 /* =========================================================
    CREATE CARDS
 ========================================================= */
@@ -1137,37 +1265,44 @@ OK
 
 <div class="timeframes">
 
-<button class="timeframe"
+<button
+class="timeframe"
 onclick="changeTimeframe(${index},'1',this)">
 1м
 </button>
 
-<button class="timeframe active"
+<button
+class="timeframe active"
 onclick="changeTimeframe(${index},'5',this)">
 5м
 </button>
 
-<button class="timeframe"
+<button
+class="timeframe"
 onclick="changeTimeframe(${index},'15',this)">
 15м
 </button>
 
-<button class="timeframe"
+<button
+class="timeframe"
 onclick="changeTimeframe(${index},'30',this)">
 30м
 </button>
 
-<button class="timeframe"
+<button
+class="timeframe"
 onclick="changeTimeframe(${index},'60',this)">
 1ч
 </button>
 
-<button class="timeframe"
+<button
+class="timeframe"
 onclick="changeTimeframe(${index},'240',this)">
 4ч
 </button>
 
-<button class="timeframe"
+<button
+class="timeframe"
 onclick="changeTimeframe(${index},'D',this)">
 1д
 </button>
@@ -1221,7 +1356,12 @@ grid.appendChild(card);
 cards[index]={
 
 symbol:actualSymbol,
-type:forex?"forex":"crypto",
+
+type:
+forex
+?"forex"
+:"crypto",
+
 interval:"5",
 
 lastCandles:null,
@@ -1247,40 +1387,52 @@ try{
 socket.close();
 }catch(e){}
 
+socket=null;
+
 }
+
 
 const symbols =
 Object.values(cards)
 .filter(c=>c.type==="crypto")
 .map(c=>c.symbol.toLowerCase());
 
+
 if(!symbols.length){
 
-connection.textContent="● Forex режим";
-connection.style.color="#ffb020";
+connection.textContent=
+"● Forex режим";
+
+connection.style.color=
+"#ffb020";
 
 return;
 
 }
+
 
 const streams =
 symbols
 .map(s=>s+"@ticker")
 .join("/");
 
+
 socket =
 new WebSocket(
 "wss://stream.binance.com:9443/stream?streams="+streams
 );
+
 
 socket.onopen=()=>{
 
 connection.textContent=
 "● Binance: онлайн";
 
-connection.style.color="#00d68f";
+connection.style.color=
+"#00d68f";
 
 };
+
 
 socket.onmessage=event=>{
 
@@ -1295,6 +1447,7 @@ message.data;
 if(!data || !data.s)
 return;
 
+
 Object.keys(cards)
 .forEach(index=>{
 
@@ -1305,6 +1458,11 @@ cards[index].symbol===data.s
 
 updateCard(index,data);
 
+updateOpenTradePrice(
+cards[index].symbol,
+parseFloat(data.c)
+);
+
 }
 
 });
@@ -1313,21 +1471,26 @@ updateCard(index,data);
 
 };
 
+
 socket.onerror=()=>{
 
 connection.textContent=
 "● Binance: ошибка";
 
-connection.style.color="#ff536d";
+connection.style.color=
+"#ff536d";
 
 };
+
 
 socket.onclose=()=>{
 
 connection.textContent=
 "● Переподключение...";
 
-connection.style.color="#ffb020";
+connection.style.color=
+"#ffb020";
+
 
 setTimeout(
 connectBinance,
@@ -1351,6 +1514,7 @@ parseFloat(data.c);
 const change =
 parseFloat(data.P);
 
+
 document.getElementById(
 `price-${index}`
 ).textContent =
@@ -1362,16 +1526,20 @@ document.getElementById(
 `change-${index}`
 );
 
+
 changeElement.textContent =
 (change>=0?"+":"")+
 change.toFixed(2)+
 "%";
 
+
 changeElement.className =
 "change "+
-(change>=0
+(
+change>=0
 ?"positive"
-:"negative");
+:"negative"
+);
 
 
 document.getElementById(
@@ -1388,6 +1556,174 @@ document.getElementById(
 formatPrice(
 parseFloat(data.l)
 );
+
+
+document.getElementById(
+`volume-${index}`
+).textContent =
+formatVolume(
+parseFloat(data.v),
+"crypto"
+);
+
+}
+
+
+/* =========================================================
+   АКТУАЛЬНАЯ ЦЕНА КРИПТО
+========================================================= */
+
+async function getCryptoCurrentPrice(symbol){
+
+const url =
+"https://api.binance.com/api/v3/ticker/price"+
+"?symbol="+
+encodeURIComponent(symbol);
+
+
+const response =
+await fetch(url);
+
+
+if(!response.ok){
+
+throw new Error(
+"Не удалось получить текущую цену Binance"
+);
+
+}
+
+
+const data =
+await response.json();
+
+
+const price=
+parseFloat(data.price);
+
+
+if(!isFinite(price)){
+
+throw new Error(
+"Некорректная цена Binance"
+);
+
+}
+
+
+return price;
+
+}
+
+
+/* =========================================================
+   АКТУАЛЬНАЯ ЦЕНА FOREX
+========================================================= */
+
+async function getForexCurrentPrice(symbol){
+
+if(
+!TWELVE_DATA_API_KEY ||
+TWELVE_DATA_API_KEY.includes("PASTE_YOUR")
+){
+
+throw new Error(
+"Не указан API-ключ Twelve Data"
+);
+
+}
+
+
+const pair=
+normalizeForex(symbol);
+
+
+const url=
+"https://api.twelvedata.com/price"+
+"?symbol="+
+encodeURIComponent(pair)+
+"&apikey="+
+encodeURIComponent(
+TWELVE_DATA_API_KEY
+);
+
+
+const response=
+await fetch(url);
+
+
+if(!response.ok){
+
+throw new Error(
+"Ошибка получения цены Forex"
+);
+
+}
+
+
+const data=
+await response.json();
+
+
+if(
+data.status==="error" ||
+!data.price
+){
+
+throw new Error(
+data.message ||
+"Цена Forex недоступна"
+);
+
+}
+
+
+const price=
+parseFloat(data.price);
+
+
+if(!isFinite(price)){
+
+throw new Error(
+"Некорректная цена Forex"
+);
+
+}
+
+
+return price;
+
+}
+
+
+/* =========================================================
+   UPDATE OPEN TRADE PRICE
+========================================================= */
+
+function updateOpenTradePrice(
+symbol,
+price
+){
+
+if(
+!isFinite(price)
+)
+return;
+
+
+trades.forEach(trade=>{
+
+if(
+!trade.closed &&
+trade.type==="crypto" &&
+trade.symbol===symbol
+){
+
+trade.current=price;
+
+}
+
+});
 
 }
 
@@ -1433,8 +1769,10 @@ throw new Error(
 
 }
 
+
 const pair =
 normalizeForex(symbol);
+
 
 const url =
 "https://api.twelvedata.com/time_series"+
@@ -1449,8 +1787,10 @@ encodeURIComponent(
 TWELVE_DATA_API_KEY
 );
 
+
 const response =
 await fetch(url);
+
 
 if(!response.ok){
 
@@ -1461,8 +1801,10 @@ response.status
 
 }
 
+
 const json =
 await response.json();
+
 
 if(
 json.status==="error" ||
@@ -1475,6 +1817,7 @@ json.message ||
 );
 
 }
+
 
 return json.values
 .reverse()
@@ -1534,8 +1877,10 @@ binanceInterval(interval)+
 "&limit="+
 ANALYSIS_CANDLES;
 
+
 const response =
 await fetch(url);
+
 
 if(!response.ok){
 
@@ -1545,8 +1890,10 @@ throw new Error(
 
 }
 
+
 const data =
 await response.json();
+
 
 return data.map(c=>({
 
@@ -1572,14 +1919,17 @@ function ema(values,period){
 if(values.length<period)
 return null;
 
+
 const multiplier=
 2/(period+1);
+
 
 let result=
 values
 .slice(0,period)
 .reduce((a,b)=>a+b,0)
 /period;
+
 
 for(
 let i=period;
@@ -1593,6 +1943,7 @@ multiplier+
 result;
 
 }
+
 
 return result;
 
@@ -1611,8 +1962,10 @@ period=14
 if(values.length<=period)
 return 50;
 
+
 let gains=0;
 let losses=0;
+
 
 for(
 let i=1;
@@ -1623,6 +1976,7 @@ i++
 const diff=
 values[i]-values[i-1];
 
+
 if(diff>=0)
 gains+=diff;
 else
@@ -1630,11 +1984,13 @@ losses-=diff;
 
 }
 
+
 let avgGain=
 gains/period;
 
 let avgLoss=
 losses/period;
+
 
 for(
 let i=period+1;
@@ -1645,17 +2001,20 @@ i++
 const diff=
 values[i]-values[i-1];
 
+
 const gain=
 Math.max(diff,0);
 
 const loss=
 Math.max(-diff,0);
 
+
 avgGain=
 (
 avgGain*(period-1)+
 gain
 )/period;
+
 
 avgLoss=
 (
@@ -1665,11 +2024,14 @@ loss
 
 }
 
+
 if(avgLoss===0)
 return 100;
 
+
 const rs=
 avgGain/avgLoss;
+
 
 return 100-
 100/(1+rs);
@@ -1689,7 +2051,9 @@ period=14
 if(candles.length<=period)
 return 0;
 
+
 const trs=[];
+
 
 for(
 let i=1;
@@ -1699,6 +2063,7 @@ i++
 
 const c=candles[i];
 const p=candles[i-1];
+
 
 trs.push(
 Math.max(
@@ -1713,6 +2078,7 @@ c.low-p.close
 );
 
 }
+
 
 return trs
 .slice(-period)
@@ -1736,8 +2102,10 @@ candles
 .slice(-period)
 .map(c=>c.volume||0);
 
+
 if(!values.length)
 return 0;
+
 
 return values.reduce(
 (a,b)=>a+b,0
@@ -1761,6 +2129,7 @@ signal:0
 
 }
 
+
 const fast=
 ema(values,12);
 
@@ -1771,23 +2140,19 @@ const line=
 fast-slow;
 
 
-/*
-   Более корректно считаем
-   направление MACD через
-   предыдущий участок.
-*/
-
 const previous=
 values.slice(
 0,
 values.length-1
 );
 
+
 const prevFast=
 ema(previous,12);
 
 const prevSlow=
 ema(previous,26);
+
 
 return{
 
@@ -1815,17 +2180,20 @@ candles.length-100
 )
 );
 
+
 const highs=
 recent.map(c=>c.high);
 
 const lows=
 recent.map(c=>c.low);
 
+
 const resistance=
 Math.max(...highs);
 
 const support=
 Math.min(...lows);
+
 
 return{
 support,
@@ -1851,8 +2219,10 @@ text:"Структура: нет данных"
 
 }
 
+
 const recent=
 candles.slice(-30);
+
 
 const first=
 recent.slice(0,10);
@@ -1862,6 +2232,7 @@ recent.slice(10,20);
 
 const last=
 recent.slice(20,30);
+
 
 const firstHigh=
 Math.max(
@@ -1878,6 +2249,7 @@ Math.max(
 ...last.map(c=>c.high)
 );
 
+
 const firstLow=
 Math.min(
 ...first.map(c=>c.low)
@@ -1893,6 +2265,7 @@ Math.min(
 ...last.map(c=>c.low)
 );
 
+
 if(
 lastHigh>middleHigh &&
 middleHigh>=firstHigh &&
@@ -1907,6 +2280,7 @@ text:"Структура: HH/HL"
 
 }
 
+
 if(
 lastLow<middleLow &&
 middleLow<=firstLow &&
@@ -1920,6 +2294,7 @@ text:"Структура: LH/LL"
 };
 
 }
+
 
 return{
 direction:"NEUTRAL",
@@ -1942,67 +2317,70 @@ score:0,
 text:"Импульс: нет данных"
 };
 
+
 const current=
 candles[candles.length-1].close;
 
+
 const previous=
 candles[candles.length-11].close;
+
 
 const change=
 (current-previous)/
 previous*100;
 
+
 if(change>1){
 
 return{
 score:8,
-text:
-"Импульс: сильный рост"
+text:"Импульс: сильный рост"
 };
 
 }
+
 
 if(change>0.25){
 
 return{
 score:4,
-text:
-"Импульс: рост"
+text:"Импульс: рост"
 };
 
 }
+
 
 if(change<-1){
 
 return{
 score:-8,
-text:
-"Импульс: сильное падение"
+text:"Импульс: сильное падение"
 };
 
 }
+
 
 if(change<-0.25){
 
 return{
 score:-4,
-text:
-"Импульс: падение"
+text:"Импульс: падение"
 };
 
 }
 
+
 return{
 score:0,
-text:
-"Импульс: слабый"
+text:"Импульс: слабый"
 };
 
 }
 
 
 /* =========================================================
-   CANDLE ANALYSIS
+   CANDLE
 ========================================================= */
 
 function candleAnalysis(candles){
@@ -2013,6 +2391,7 @@ candles[candles.length-2];
 const b=
 candles[candles.length-1];
 
+
 if(!a || !b){
 
 return{
@@ -2022,6 +2401,7 @@ text:"Свечи: нет данных"
 
 }
 
+
 const body=
 Math.abs(
 b.close-b.open
@@ -2029,6 +2409,7 @@ b.close-b.open
 
 const range=
 b.high-b.low;
+
 
 if(range<=0){
 
@@ -2039,11 +2420,14 @@ text:"Свечи: нейтрально"
 
 }
 
+
 const bodyRatio=
 body/range;
 
+
 const bullish=
 b.close>b.open;
+
 
 if(bodyRatio>.65){
 
@@ -2061,6 +2445,7 @@ bullish
 
 }
 
+
 return{
 
 score:
@@ -2077,7 +2462,7 @@ bullish
 
 
 /* =========================================================
-   ORDER BLOCK / ЗОНА ИМПУЛЬСА
+   ORDER BLOCK
 ========================================================= */
 
 function orderBlockAnalysis(candles){
@@ -2091,8 +2476,10 @@ text:"OB: нет данных"
 
 }
 
+
 const last=
 candles[candles.length-1];
+
 
 const lookback=
 candles.slice(
@@ -2100,8 +2487,10 @@ candles.slice(
 -3
 );
 
+
 let bullishZone=false;
 let bearishZone=false;
+
 
 for(let i=0;i<lookback.length-3;i++){
 
@@ -2114,19 +2503,21 @@ lookback[i+1];
 const next2=
 lookback[i+2];
 
+
 const moveUp=
 next2.close-c.close;
 
 const moveDown=
 c.close-next2.close;
 
+
 const range=
 c.high-c.low;
 
-if(
-range<=0
-)
+
+if(range<=0)
 continue;
+
 
 if(
 c.close<c.open &&
@@ -2143,6 +2534,7 @@ bullishZone=true;
 }
 
 }
+
 
 if(
 c.close>c.open &&
@@ -2162,6 +2554,7 @@ bearishZone=true;
 
 }
 
+
 if(bullishZone){
 
 return{
@@ -2170,6 +2563,7 @@ text:"Зона: бычий OB"
 };
 
 }
+
 
 if(bearishZone){
 
@@ -2180,6 +2574,7 @@ text:"Зона: медвежий OB"
 
 }
 
+
 return{
 score:0,
 text:"Зона: OB не найден"
@@ -2189,7 +2584,7 @@ text:"Зона: OB не найден"
 
 
 /* =========================================================
-   SIGNAL ALGORITHM
+   SIGNAL
 ========================================================= */
 
 function calculateSignal(candles){
@@ -2204,8 +2599,7 @@ return{
 signal:"WAIT",
 score:50,
 
-info:
-"Недостаточно данных",
+info:"Недостаточно данных",
 
 factors:[]
 
@@ -2214,16 +2608,13 @@ factors:[]
 }
 
 
-/*
-   Используем последние 250 свечей,
-   если API вернул меньше — используем всё.
-*/
-
 const data=
 candles.slice(-ANALYSIS_CANDLES);
 
+
 const closes=
 data.map(c=>c.close);
+
 
 const last=
 closes[closes.length-1];
@@ -2276,9 +2667,7 @@ let score=50;
 const factors=[];
 
 
-/* =========================================================
-   EMA 20 / 50
-========================================================= */
+/* EMA */
 
 if(
 ema20!==null &&
@@ -2308,9 +2697,7 @@ type:"bad"
 }
 
 
-/* =========================================================
-   EMA 200
-========================================================= */
+/* EMA 200 */
 
 if(ema200!==null){
 
@@ -2337,9 +2724,7 @@ type:"bad"
 }
 
 
-/* =========================================================
-   RSI
-========================================================= */
+/* RSI */
 
 if(rsiValue<30){
 
@@ -2391,9 +2776,7 @@ type:"neutral"
 }
 
 
-/* =========================================================
-   MACD
-========================================================= */
+/* MACD */
 
 if(
 macdValue.macd>
@@ -2419,76 +2802,73 @@ type:"bad"
 }
 
 
-/* =========================================================
-   STRUCTURE
-========================================================= */
+/* STRUCTURE */
 
 score+=structure.score;
 
 factors.push({
+
 text:structure.text,
+
 type:
 structure.score>0
 ?"good"
 :structure.score<0
 ?"bad"
 :"neutral"
+
 });
 
 
-/* =========================================================
-   MOMENTUM
-========================================================= */
+/* MOMENTUM */
 
 score+=momentum.score;
 
 factors.push({
+
 text:momentum.text,
+
 type:
 momentum.score>0
 ?"good"
 :momentum.score<0
 ?"bad"
 :"neutral"
+
 });
 
 
-/* =========================================================
-   ORDER BLOCK
-========================================================= */
+/* ORDER BLOCK */
 
 score+=orderBlock.score;
 
 factors.push({
+
 text:orderBlock.text,
+
 type:
 orderBlock.score>0
 ?"good"
 :orderBlock.score<0
 ?"bad"
 :"neutral"
+
 });
 
 
-/* =========================================================
-   SUPPORT / RESISTANCE
-========================================================= */
+/* LEVELS */
 
 const distanceSupport=
 Math.abs(
 last-levels.support
 )/last*100;
 
+
 const distanceResistance=
 Math.abs(
 levels.resistance-last
 )/last*100;
 
-
-/*
-   Не покупаем прямо под сопротивлением.
-   Не продаём прямо над поддержкой.
-*/
 
 if(
 distanceResistance<0.4
@@ -2524,9 +2904,7 @@ type:"neutral"
 }
 
 
-/* =========================================================
-   VOLUME
-========================================================= */
+/* VOLUME */
 
 if(
 avgVol>0 &&
@@ -2535,6 +2913,7 @@ currentVol>avgVol*1.25
 
 const lastCandle=
 data[data.length-1];
+
 
 if(
 lastCandle.close>
@@ -2569,14 +2948,13 @@ type:"neutral"
 }
 
 
-/* =========================================================
-   VOLATILITY
-========================================================= */
+/* VOLATILITY */
 
 const volatility=
 last>0
 ?atrValue/last*100
 :0;
+
 
 factors.push({
 
@@ -2590,9 +2968,7 @@ type:"neutral"
 });
 
 
-/* =========================================================
-   CANDLE
-========================================================= */
+/* CANDLE */
 
 score+=candle.score;
 
@@ -2610,10 +2986,6 @@ candle.score>0
 });
 
 
-/* =========================================================
-   FINAL SCORE
-========================================================= */
-
 score=
 Math.max(
 0,
@@ -2623,16 +2995,6 @@ Math.round(score)
 )
 );
 
-
-/*
-   Очень важный фильтр.
-
-   Даже если score высокий,
-   не выдаём BUY, если структура
-   сильно медвежья.
-
-   И наоборот.
-*/
 
 let signal="WAIT";
 
@@ -2694,8 +3056,10 @@ document.getElementById(
 `factors-${index}`
 );
 
+
 signal.textContent=
 result.signal;
+
 
 signal.className=
 "signal-main "+
@@ -2708,8 +3072,10 @@ result.signal==="SELL"
 :"signal-wait"
 );
 
+
 info.textContent=
 result.info;
+
 
 factors.innerHTML=
 result.factors
@@ -2734,9 +3100,11 @@ async function loadSignal(index){
 const card=
 cards[index];
 
+
 try{
 
 let candles;
+
 
 if(card.type==="forex"){
 
@@ -2755,6 +3123,7 @@ card.interval
 );
 
 }
+
 
 if(!candles.length)
 throw new Error(
@@ -2822,6 +3191,11 @@ card.lastPrice=
 last.close;
 
 
+document.getElementById(
+`error-${index}`
+).textContent="";
+
+
 }
 catch(e){
 
@@ -2830,8 +3204,21 @@ document.getElementById(
 ).textContent=
 "НЕТ ДАННЫХ";
 
+
+document.getElementById(
+`signal-${index}`
+).className=
+"signal-main signal-wait";
+
+
 document.getElementById(
 `signal-info-${index}`
+).textContent=
+e.message;
+
+
+document.getElementById(
+`error-${index}`
 ).textContent=
 e.message;
 
@@ -2851,28 +3238,36 @@ document.getElementById(
 `chart-${index}`
 );
 
+
 container.innerHTML="";
+
 
 const wrapper=
 document.createElement("div");
 
+
 wrapper.style.width="100%";
 wrapper.style.height="100%";
+wrapper.style.minHeight="280px";
 
 
 const script=
 document.createElement("script");
 
+
 script.type=
 "text/javascript";
 
+
 script.src=
 "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
+
 
 script.async=true;
 
 
 let tvSymbol;
+
 
 if(
 cards[index].type==="forex"
@@ -2934,6 +3329,29 @@ wrapper.appendChild(script);
 
 container.appendChild(wrapper);
 
+
+/*
+   Даём TradingView время на
+   расчёт размеров контейнера.
+*/
+
+setTimeout(()=>{
+
+window.dispatchEvent(
+new Event("resize")
+);
+
+},300);
+
+
+setTimeout(()=>{
+
+window.dispatchEvent(
+new Event("resize")
+);
+
+},1000);
+
 }
 
 
@@ -2948,10 +3366,12 @@ document.getElementById(
 `input-${index}`
 );
 
+
 const value=
 normalizeInput(
 input.value
 );
+
 
 if(!value)
 return;
@@ -2960,10 +3380,12 @@ return;
 const forex=
 isForexSymbol(value);
 
+
 cards[index].type=
 forex
 ?"forex"
 :"crypto";
+
 
 cards[index].symbol=
 forex
@@ -2993,10 +3415,12 @@ document.getElementById(
 `market-${index}`
 );
 
+
 badge.textContent=
 forex
 ?"FOREX"
 :"CRYPTO";
+
 
 badge.className=
 "market-badge"+
@@ -3009,11 +3433,15 @@ forex
 
 saveCards();
 
+
 resetCard(index);
+
 
 loadTradingView(index);
 
+
 await loadSignal(index);
+
 
 connectBinance();
 
@@ -3057,6 +3485,7 @@ button.classList.add(
 
 loadTradingView(index);
 
+
 await loadSignal(index);
 
 }
@@ -3089,19 +3518,27 @@ document.getElementById(
 ).textContent=
 "АНАЛИЗ...";
 
+
 document.getElementById(
 `signal-${index}`
 ).className=
 "signal-main signal-wait";
+
 
 document.getElementById(
 `signal-info-${index}`
 ).textContent=
 "Получение 250 свечей...";
 
+
 document.getElementById(
 `factors-${index}`
 ).innerHTML="";
+
+
+document.getElementById(
+`error-${index}`
+).textContent="";
 
 }
 
@@ -3172,20 +3609,24 @@ return type==="forex"
 
 }
 
+
 if(number>=1000000000)
 return(
 number/1000000000
 ).toFixed(2)+"B";
+
 
 if(number>=1000000)
 return(
 number/1000000
 ).toFixed(2)+"M";
 
+
 if(number>=1000)
 return(
 number/1000
 ).toFixed(2)+"K";
+
 
 return number.toFixed(2);
 
@@ -3205,6 +3646,7 @@ document
 page==="main"
 );
 
+
 document
 .getElementById("signalsPage")
 .classList.toggle(
@@ -3212,12 +3654,14 @@ document
 page==="signals"
 );
 
+
 document
 .getElementById("mainNav")
 .classList.toggle(
 "active",
 page==="main"
 );
+
 
 document
 .getElementById("signalsNav")
@@ -3297,9 +3741,11 @@ b=>b.classList.remove(
 )
 );
 
+
 button.classList.add(
 "active"
 );
+
 
 selectedTF=
 button.dataset.tf;
@@ -3346,10 +3792,12 @@ document.getElementById(
 "monitorInput"
 );
 
+
 const value=
 normalizeInput(
 input.value
 );
+
 
 if(!value)
 return;
@@ -3357,6 +3805,7 @@ return;
 
 const forex=
 isForexSymbol(value);
+
 
 const symbol=
 forex
@@ -3399,16 +3848,21 @@ enabled:true,
 
 lastSignal:null,
 
-lastSignalTime:0
+lastSignalTime:0,
+
+lastSignalDetected:null
 
 });
 
 
 saveMonitors();
 
+
 input.value="";
 
+
 closeMonitorModal();
+
 
 renderMonitorBar();
 
@@ -3426,7 +3880,9 @@ monitors.filter(
 m=>m.id!==id
 );
 
+
 saveMonitors();
+
 
 renderMonitorBar();
 
@@ -3443,6 +3899,7 @@ const bar=
 document.getElementById(
 "monitorBar"
 );
+
 
 if(!monitors.length){
 
@@ -3499,9 +3956,16 @@ result.signal!=="SELL"
 return;
 
 
+if(
+!isFinite(price) ||
+price<=0
+)
+return;
+
+
 /*
-   Не создаём второй сигнал,
-   пока старый ещё открыт.
+   Если уже есть открытая сделка
+   этой пары — новую не создаём.
 */
 
 const existing=
@@ -3511,8 +3975,31 @@ t=>
 t.monitorId===monitor.id
 );
 
-if(existing)
+
+if(existing){
+
 return;
+
+}
+
+
+/*
+   Не открываем сделку на каждом
+   повторном обновлении одного сигнала.
+
+   Новая сделка должна появиться
+   только после нового сигнала.
+*/
+
+if(
+SAME_SIGNAL_BLOCK &&
+monitor.lastSignalDetected===
+result.signal
+){
+
+return;
+
+}
 
 
 /*
@@ -3528,26 +4015,8 @@ t.monitorId===monitor.id
 
 if(
 lastTrade &&
-Date.now()-lastTrade.start
-<SIGNAL_COOLDOWN
-){
-
-return;
-
-}
-
-
-/*
-   Не открываем сделку,
-   если сигнал сменился слишком быстро.
-*/
-
-if(
-monitor.lastSignal===
-result.signal &&
-Date.now()-
-monitor.lastSignalTime
-<SIGNAL_COOLDOWN
+Date.now()-lastTrade.start<
+SIGNAL_COOLDOWN
 ){
 
 return;
@@ -3614,7 +4083,15 @@ resultValue:null
 trades.unshift(trade);
 
 
+/*
+   Запоминаем именно сигнал,
+   на котором открыли сделку.
+*/
+
 monitor.lastSignal=
+result.signal;
+
+monitor.lastSignalDetected=
 result.signal;
 
 monitor.lastSignalTime=
@@ -3633,6 +4110,9 @@ saveTrades();
 
 saveMonitors();
 
+
+renderSignals();
+
 }
 
 
@@ -3645,6 +4125,7 @@ async function updateMonitor(monitor){
 try{
 
 let candles;
+
 
 if(
 monitor.type==="forex"
@@ -3679,11 +4160,33 @@ const result=
 calculateSignal(candles);
 
 
+/*
+   Если сигнал изменился с BUY
+   на SELL или наоборот —
+   разрешаем новое открытие.
+*/
+
+if(
+monitor.lastSignalDetected!==result.signal
+){
+
+if(
+result.signal==="BUY" ||
+result.signal==="SELL"
+){
+
 createTrade(
 monitor,
 result,
 last.close
 );
+
+}
+
+monitor.lastSignalDetected=
+result.signal;
+
+}
 
 
 const openTrade=
@@ -3702,18 +4205,11 @@ last.close;
 }
 
 
-/*
-   Запоминаем последнее состояние.
-*/
-
 monitor.lastPrice=
 last.close;
 
 monitor.lastScore=
 result.score;
-
-monitor.lastSignalDetected=
-result.signal;
 
 
 }
@@ -3731,74 +4227,86 @@ e
 
 
 /* =========================================================
-   CLOSE EXPIRED TRADES
+   ЗАКРЫТИЕ ОДНОЙ СДЕЛКИ
 ========================================================= */
 
-async function closeExpiredTrades(){
-
-const now=
-Date.now();
-
-
-for(
-const trade of trades
-){
+async function closeTradeNow(trade){
 
 if(
-trade.closed ||
-now<trade.end
+trade.closed
 )
-continue;
+return;
 
 
-const monitor=
-monitors.find(
-m=>
-m.id===
-trade.monitorId
-);
+let exit=
+trade.current;
 
 
-if(!monitor)
-continue;
-
+/*
+   Для крипты всегда пытаемся
+   взять САМУЮ АКТУАЛЬНУЮ цену Binance.
+*/
 
 try{
 
-let candles;
+if(trade.type==="crypto"){
 
-if(
-monitor.type==="forex"
-){
-
-candles=
-await getForexKlines(
-monitor.symbol,
-monitor.interval
+exit=
+await getCryptoCurrentPrice(
+trade.symbol
 );
 
 }else{
 
-candles=
-await getCryptoKlines(
-monitor.symbol,
-monitor.interval
+exit=
+await getForexCurrentPrice(
+trade.symbol
 );
 
 }
 
+}
+catch(e){
 
-if(!candles.length)
-continue;
+console.log(
+"Цена закрытия недоступна:",
+trade.symbol,
+e
+);
 
 
-const exit=
-candles[
-candles.length-1
-].close;
+/*
+   Если API временно недоступно,
+   используем последнюю известную цену.
+*/
+
+if(
+!isFinite(exit) ||
+exit<=0
+){
+
+exit=trade.current;
+
+}
+
+}
+
+
+if(
+!isFinite(exit) ||
+exit<=0
+){
+
+return false;
+
+}
 
 
 trade.exit=
+exit;
+
+
+trade.current=
 exit;
 
 
@@ -3812,13 +4320,15 @@ trade.resultValue=
 difference;
 
 
-if(
-Math.abs(difference)
-<
+const tolerance=
 Math.max(
 Math.abs(trade.entry)*0.000001,
 1e-12
-)
+);
+
+
+if(
+Math.abs(difference)<tolerance
 ){
 
 trade.result="FLAT";
@@ -3840,20 +4350,57 @@ trade.result="LOSS";
 
 trade.closed=true;
 
-trade.current=
-exit;
+
+/*
+   Время фактического закрытия.
+*/
+
+trade.closedAt=
+Date.now();
+
+
+return true;
 
 }
-catch(e){
 
-console.log(e);
 
-}
+/* =========================================================
+   CLOSE EXPIRED TRADES
+========================================================= */
+
+async function closeExpiredTrades(){
+
+const now=
+Date.now();
+
+
+const expired=
+trades.filter(
+trade=>
+!trade.closed &&
+now>=trade.end
+);
+
+
+if(!expired.length)
+return;
+
+
+for(
+const trade of expired
+){
+
+await closeTradeNow(
+trade
+);
 
 }
 
 
 saveTrades();
+
+
+renderSignals();
 
 }
 
@@ -4305,11 +4852,14 @@ type
 const abs=
 Math.abs(value);
 
+
 if(type==="forex")
 return abs.toFixed(5);
 
+
 if(abs<1)
 return abs.toFixed(4);
+
 
 return abs.toFixed(2);
 
@@ -4394,16 +4944,19 @@ monitorBusy=true;
 
 try{
 
+
 /*
-   Сначала закрываем всё,
-   чему уже пришло время.
+   САМОЕ ПЕРВОЕ:
+
+   закрываем сделки,
+   которым уже истёк срок.
 */
 
 await closeExpiredTrades();
 
 
 /*
-   Затем обновляем мониторинг.
+   Потом обновляем мониторинг.
 */
 
 for(
@@ -4501,8 +5054,7 @@ monitorLoop();
 
 
 /*
-   Теперь мониторинг проверяется
-   чаще — каждые 5 секунд.
+   Проверка каждые 5 секунд.
 */
 
 setInterval(
@@ -4512,13 +5064,51 @@ MONITOR_INTERVAL
 
 
 /*
-   Таймер открытых сделок.
+   Обновляем таймеры
+   открытых сделок каждую секунду.
 */
 
 setInterval(
-renderSignals,
+async ()=>{
+
+await closeExpiredTrades();
+
+renderSignals();
+
+},
 1000
 );
+
+
+/* =========================================================
+   RESIZE CHART
+========================================================= */
+
+window.addEventListener(
+"resize",
+()=>{
+
+setTimeout(()=>{
+
+document
+.querySelectorAll(".chart")
+.forEach(chart=>{
+
+const wrapper=
+chart.querySelector("div");
+
+if(wrapper){
+
+wrapper.style.width="100%";
+wrapper.style.height="100%";
+
+}
+
+});
+
+},100);
+
+});
 
 
 /* =========================================================
