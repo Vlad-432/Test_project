@@ -909,11 +909,71 @@ onclick="addMonitor()">
 <script>
 
 /* =========================================================
-   API
+   FETCH С ПОВТОРНЫМИ ПОПЫТКАМИ
+
+   Если VPN/сеть моргнула на секунду — один неудачный
+   запрос не должен превращаться в кривую цену. Пробуем
+   ещё пару раз с небольшой паузой перед тем как сдаться.
 ========================================================= */
 
-const TWELVE_DATA_API_KEY =
-"c41ad6d74c4d4c22ac1a20312e9246a7";
+function delay(ms){
+
+return new Promise(
+resolve=>setTimeout(resolve,ms)
+);
+
+}
+
+
+async function fetchWithRetry(
+url,
+retries=2,
+retryDelay=700
+){
+
+let lastError;
+
+for(
+let attempt=0;
+attempt<=retries;
+attempt++
+){
+
+try{
+
+const response=
+await fetch(url);
+
+if(!response.ok){
+
+throw new Error(
+"HTTP "+response.status
+);
+
+}
+
+return response;
+
+}
+catch(e){
+
+lastError=e;
+
+if(attempt<retries){
+
+await delay(
+retryDelay*(attempt+1)
+);
+
+}
+
+}
+
+}
+
+throw lastError;
+
+}
 
 
 /* =========================================================
@@ -1252,6 +1312,7 @@ class="pair-input"
 id="input-${index}"
 value="${actualSymbol}"
 placeholder="BTC / AUDCAD"
+onkeydown="if(event.key==='Enter'){changePair(${index});}"
 >
 
 <button
@@ -1617,202 +1678,64 @@ return price;
 
 
 /* =========================================================
-   АКТУАЛЬНАЯ ЦЕНА FOREX
+   FINNHUB — ФОРЕКС
+
+   Живая цена приходит через WebSocket (как у Binance
+   для крипты) — тик за тиком, без опроса.
+   Свечи для расчёта сигнала берём через REST
+   /forex/candle (лимит бесплатного тарифа — 60 запросов
+   в минуту, гораздо щедрее Twelve Data).
 ========================================================= */
 
-async function getForexCurrentPrice(symbol){
+const FINNHUB_API_KEY =
+"d9ujk9pr01qs9cmd3oogd9ujk9pr01qs9cmd3op0";
 
-if(
-!TWELVE_DATA_API_KEY ||
-TWELVE_DATA_API_KEY.includes("PASTE_YOUR")
-){
 
-throw new Error(
-"Не указан API-ключ Twelve Data"
+function finnhubReady(){
+
+return (
+FINNHUB_API_KEY &&
+!FINNHUB_API_KEY.includes("PASTE_YOUR")
 );
 
 }
 
 
-const pair=
-normalizeForex(symbol);
+/*
+   "EURUSD" -> "OANDA:EUR_USD"
+*/
 
+function toFinnhubSymbol(symbol){
 
-const url=
-"https://api.twelvedata.com/price"+
-"?symbol="+
-encodeURIComponent(pair)+
-"&apikey="+
-encodeURIComponent(
-TWELVE_DATA_API_KEY
-);
+const clean=
+normalizeInput(symbol);
 
-
-const response=
-await fetch(url);
-
-
-if(!response.ok){
-
-throw new Error(
-"Ошибка получения цены Forex"
+return (
+"OANDA:"+
+clean.substring(0,3)+
+"_"+
+clean.substring(3,6)
 );
 
 }
 
 
-const data=
-await response.json();
+/*
+   "OANDA:EUR_USD" -> "EURUSD"
+*/
 
+function fromFinnhubSymbol(finnhubSymbol){
 
-if(
-data.status==="error" ||
-!data.price
-){
-
-throw new Error(
-data.message ||
-"Цена Forex недоступна"
-);
+return finnhubSymbol
+.replace("OANDA:","")
+.replace("_","/");
 
 }
 
-
-const price=
-parseFloat(data.price);
-
-
-if(!isFinite(price)){
-
-throw new Error(
-"Некорректная цена Forex"
-);
-
-}
-
-
-return price;
-
-}
-
-
-/* =========================================================
-   LIVE-КЭШ ЦЕН ФОРЕКС (batch, экономит лимит Twelve Data)
-
-   Вместо того чтобы тянуть тяжёлые 250-свечные time_series
-   каждые 5 секунд на КАЖДУЮ пару (это мгновенно упирается
-   в лимит бесплатного тарифа Twelve Data — 8 запросов/мин —
-   и приводит к устаревшим/"заоблачным" ценам), опрашиваем
-   лёгкий эндпоинт /price ОДНИМ batch-запросом на все пары
-   сразу, раз в FOREX_PRICE_INTERVAL мс.
-========================================================= */
 
 const forexLivePrices = {};
 
-const FOREX_PRICE_INTERVAL = 5000;
-
-const FOREX_PRICE_MAX_AGE = 20000;
-
-let forexPriceBusy = false;
-
-
-async function refreshForexLivePrices(){
-
-if(forexPriceBusy)
-return;
-
-if(
-!TWELVE_DATA_API_KEY ||
-TWELVE_DATA_API_KEY.includes("PASTE_YOUR")
-)
-return;
-
-const symbols=
-[...new Set(
-monitors
-.filter(m=>m.enabled && m.type==="forex")
-.map(m=>m.symbol)
-)];
-
-if(!symbols.length)
-return;
-
-forexPriceBusy=true;
-
-try{
-
-const pairs=
-symbols.map(normalizeForex);
-
-const url=
-"https://api.twelvedata.com/price"+
-"?symbol="+
-encodeURIComponent(pairs.join(","))+
-"&apikey="+
-encodeURIComponent(TWELVE_DATA_API_KEY);
-
-const response=
-await fetch(url);
-
-if(!response.ok)
-return;
-
-const data=
-await response.json();
-
-if(symbols.length===1){
-
-const price=
-parseFloat(data.price);
-
-if(isFinite(price)){
-
-forexLivePrices[symbols[0]]={
-price,
-time:Date.now()
-};
-
-}
-
-}else{
-
-symbols.forEach((sym,i)=>{
-
-const entry=
-data[pairs[i]];
-
-const price=
-entry && parseFloat(entry.price);
-
-if(entry && isFinite(price)){
-
-forexLivePrices[sym]={
-price,
-time:Date.now()
-};
-
-}
-
-});
-
-}
-
-}
-catch(e){
-
-console.log(
-"Live forex price error:",
-e
-);
-
-}
-finally{
-
-forexPriceBusy=false;
-
-}
-
-}
+const FOREX_PRICE_MAX_AGE = 15000;
 
 
 function getLiveForexPrice(symbol){
@@ -1830,6 +1753,266 @@ return entry.price;
 }
 
 return null;
+
+}
+
+
+let finnhubSocket=null;
+
+const finnhubSubscribed=
+new Set();
+
+let finnhubReconnectTimer=null;
+
+
+function collectForexSymbols(){
+
+const fromMonitors=
+monitors
+.filter(m=>m.enabled && m.type==="forex")
+.map(m=>m.symbol);
+
+const fromCards=
+Object.values(cards)
+.filter(c=>c.type==="forex")
+.map(c=>c.symbol);
+
+return [...new Set([
+...fromMonitors,
+...fromCards
+])];
+
+}
+
+
+function connectFinnhub(){
+
+if(!finnhubReady())
+return;
+
+if(finnhubSocket){
+
+try{
+finnhubSocket.close();
+}catch(e){}
+
+finnhubSocket=null;
+
+}
+
+finnhubSubscribed.clear();
+
+finnhubSocket=
+new WebSocket(
+"wss://ws.finnhub.io?token="+
+encodeURIComponent(FINNHUB_API_KEY)
+);
+
+
+finnhubSocket.onopen=()=>{
+
+refreshFinnhubSubscriptions();
+
+};
+
+
+finnhubSocket.onmessage=event=>{
+
+try{
+
+const message=
+JSON.parse(event.data);
+
+if(
+message.type!=="trade" ||
+!message.data
+)
+return;
+
+message.data.forEach(tick=>{
+
+if(
+!tick.s ||
+!tick.s.startsWith("OANDA:")
+)
+return;
+
+const symbol=
+fromFinnhubSymbol(tick.s);
+
+const price=
+parseFloat(tick.p);
+
+if(!isFinite(price))
+return;
+
+forexLivePrices[symbol]={
+price,
+time:Date.now()
+};
+
+updateOpenTradePrice(
+symbol,
+price
+);
+
+Object.keys(cards)
+.forEach(index=>{
+
+if(
+cards[index].type==="forex" &&
+cards[index].symbol===symbol
+){
+
+const el=
+document.getElementById(
+`price-${index}`
+);
+
+if(el){
+
+el.textContent=
+formatPrice(price,"forex");
+
+}
+
+}
+
+});
+
+});
+
+}catch(e){}
+
+};
+
+
+finnhubSocket.onclose=()=>{
+
+if(finnhubReconnectTimer)
+clearTimeout(finnhubReconnectTimer);
+
+finnhubReconnectTimer=
+setTimeout(
+connectFinnhub,
+3000
+);
+
+};
+
+
+finnhubSocket.onerror=()=>{
+
+console.log(
+"Finnhub WS ошибка"
+);
+
+};
+
+}
+
+
+function refreshFinnhubSubscriptions(){
+
+if(
+!finnhubSocket ||
+finnhubSocket.readyState!==WebSocket.OPEN
+)
+return;
+
+const wanted=
+new Set(
+collectForexSymbols()
+);
+
+
+wanted.forEach(symbol=>{
+
+if(!finnhubSubscribed.has(symbol)){
+
+finnhubSocket.send(
+JSON.stringify({
+type:"subscribe",
+symbol:toFinnhubSymbol(symbol)
+})
+);
+
+finnhubSubscribed.add(symbol);
+
+}
+
+});
+
+
+finnhubSubscribed.forEach(symbol=>{
+
+if(!wanted.has(symbol)){
+
+finnhubSocket.send(
+JSON.stringify({
+type:"unsubscribe",
+symbol:toFinnhubSymbol(symbol)
+})
+);
+
+finnhubSubscribed.delete(symbol);
+
+}
+
+});
+
+}
+
+
+/* =========================================================
+   АКТУАЛЬНАЯ ЦЕНА FOREX (разовый запрос —
+   используется как запасной вариант, если WS ещё не
+   успел прислать тик по этой паре)
+========================================================= */
+
+async function getForexCurrentPrice(symbol){
+
+const live=
+getLiveForexPrice(symbol);
+
+if(live!==null)
+return live;
+
+if(!finnhubReady()){
+
+throw new Error(
+"Не указан API-ключ Finnhub"
+);
+
+}
+
+const url=
+"https://finnhub.io/api/v1/quote"+
+"?symbol="+
+encodeURIComponent(
+toFinnhubSymbol(symbol)
+)+
+"&token="+
+encodeURIComponent(FINNHUB_API_KEY);
+
+const response=
+await fetchWithRetry(url);
+
+const data=
+await response.json();
+
+const price=
+parseFloat(data.c);
+
+if(!isFinite(price) || price<=0){
+
+throw new Error(
+"Цена Forex недоступна"
+);
+
+}
+
+return price;
 
 }
 
@@ -1853,7 +2036,6 @@ trades.forEach(trade=>{
 
 if(
 !trade.closed &&
-trade.type==="crypto" &&
 trade.symbol===symbol
 ){
 
@@ -1867,24 +2049,120 @@ trade.current=price;
 
 
 /* =========================================================
-   TWELVE DATA
+   FINNHUB — СВЕЧИ ДЛЯ СИГНАЛА
 ========================================================= */
 
-function twelveInterval(interval){
+function finnhubResolution(interval){
 
 const map={
 
-"1":"1min",
-"5":"5min",
-"15":"15min",
-"30":"30min",
-"60":"1h",
-"240":"4h",
-"D":"1day"
+"1":"1",
+"5":"5",
+"15":"15",
+"30":"30",
+"60":"60",
+"240":"60",
+"D":"D"
 
 };
 
-return map[interval] || "5min";
+return map[interval] || "5";
+
+}
+
+
+function intervalSeconds(interval){
+
+const map={
+
+"1":60,
+"5":300,
+"15":900,
+"30":1800,
+"60":3600,
+"240":14400,
+"D":86400
+
+};
+
+return map[interval] || 300;
+
+}
+
+
+function parseFinnhubCandles(json){
+
+if(
+json.s!=="ok" ||
+!json.t ||
+!json.t.length
+)
+return [];
+
+const out=[];
+
+for(
+let i=0;
+i<json.t.length;
+i++
+){
+
+out.push({
+
+time:json.t[i]*1000,
+open:json.o[i],
+high:json.h[i],
+low:json.l[i],
+close:json.c[i],
+volume:json.v ? (json.v[i]||0) : 0
+
+});
+
+}
+
+return out;
+
+}
+
+
+/*
+   Finnhub не отдаёт готовые 4-часовые свечи —
+   собираем их сами из часовых (по 4 штуки в одну).
+*/
+
+function aggregateCandles(candles,groupSize){
+
+const out=[];
+
+for(
+let i=0;
+i<candles.length;
+i+=groupSize
+){
+
+const group=
+candles.slice(i,i+groupSize);
+
+if(!group.length)
+continue;
+
+out.push({
+
+time:group[0].time,
+open:group[0].open,
+high:Math.max(...group.map(c=>c.high)),
+low:Math.min(...group.map(c=>c.low)),
+close:group[group.length-1].close,
+volume:group.reduce(
+(sum,c)=>sum+(c.volume||0),
+0
+)
+
+});
+
+}
+
+return out;
 
 }
 
@@ -1894,86 +2172,76 @@ symbol,
 interval
 ){
 
-if(
-!TWELVE_DATA_API_KEY ||
-TWELVE_DATA_API_KEY.includes(
-"PASTE_YOUR"
-)
-){
+if(!finnhubReady()){
 
 throw new Error(
-"Не указан API-ключ Twelve Data"
+"Не указан API-ключ Finnhub"
 );
 
 }
 
+const needsAggregation=
+interval==="240";
 
-const pair =
-normalizeForex(symbol);
+const fetchInterval=
+needsAggregation
+?"60"
+:interval;
+
+const secondsPer=
+intervalSeconds(fetchInterval);
+
+const count=
+needsAggregation
+?ANALYSIS_CANDLES*4
+:ANALYSIS_CANDLES;
+
+const to=
+Math.floor(Date.now()/1000);
+
+const from=
+to-(count*secondsPer);
 
 
-const url =
-"https://api.twelvedata.com/time_series"+
+const url=
+"https://finnhub.io/api/v1/forex/candle"+
 "?symbol="+
-encodeURIComponent(pair)+
-"&interval="+
-twelveInterval(interval)+
-"&outputsize="+
-ANALYSIS_CANDLES+
-"&apikey="+
 encodeURIComponent(
-TWELVE_DATA_API_KEY
-);
+toFinnhubSymbol(symbol)
+)+
+"&resolution="+
+finnhubResolution(fetchInterval)+
+"&from="+from+
+"&to="+to+
+"&token="+
+encodeURIComponent(FINNHUB_API_KEY);
 
 
-const response =
-await fetch(url);
+const response=
+await fetchWithRetry(url);
 
-
-if(!response.ok){
-
-throw new Error(
-"Ошибка Twelve Data: "+
-response.status
-);
-
-}
-
-
-const json =
+const json=
 await response.json();
 
+let candles=
+parseFinnhubCandles(json);
 
-if(
-json.status==="error" ||
-!json.values
-){
+if(!candles.length){
 
 throw new Error(
-json.message ||
 "Forex-пара не найдена"
 );
 
 }
 
+if(needsAggregation){
 
-return json.values
-.reverse()
-.map(c=>({
+candles=
+aggregateCandles(candles,4);
 
-time:new Date(
-c.datetime
-).getTime(),
+}
 
-open:parseFloat(c.open),
-high:parseFloat(c.high),
-low:parseFloat(c.low),
-close:parseFloat(c.close),
-
-volume:
-parseFloat(c.volume)||0
-
-}));
+return candles;
 
 }
 
@@ -3583,6 +3851,8 @@ await loadSignal(index);
 
 connectBinance();
 
+refreshFinnhubSubscriptions();
+
 }
 
 
@@ -4004,6 +4274,8 @@ closeMonitorModal();
 
 renderMonitorBar();
 
+refreshFinnhubSubscriptions();
+
 }
 
 
@@ -4023,6 +4295,8 @@ saveMonitors();
 
 
 renderMonitorBar();
+
+refreshFinnhubSubscriptions();
 
 }
 
@@ -4260,7 +4534,7 @@ renderSignals();
 
 const forexCandleCache={};
 
-const FOREX_CANDLE_REFRESH=20000;
+const FOREX_CANDLE_REFRESH=8000;
 
 
 async function updateMonitor(monitor){
@@ -5231,16 +5505,10 @@ connectBinance();
 
 
 /*
-   Форекс: живые цены (batch),
-   отдельно от тяжёлых свечей.
+   Finnhub real-time (форекс).
 */
 
-refreshForexLivePrices();
-
-setInterval(
-refreshForexLivePrices,
-FOREX_PRICE_INTERVAL
-);
+connectFinnhub();
 
 
 /*
