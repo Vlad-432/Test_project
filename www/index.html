@@ -93,6 +93,39 @@ header{
     height:100%;
 }
 
+.api-settings-bar{
+    height:26px;
+    margin-bottom:6px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+}
+
+.settings-btn{
+    border:1px solid #29313e;
+    background:#0b0f15;
+    color:#8993a5;
+    border-radius:7px;
+    padding:5px 8px;
+    cursor:pointer;
+    font-size:10px;
+}
+
+.settings-btn:hover{
+    color:#00d68f;
+    border-color:#00d68f;
+}
+
+.api-status{
+    color:#556075;
+    font-size:9px;
+}
+
+.api-status-warn{
+    color:#ffb020;
+}
+
 .main-title{
     height:42px;
     display:flex;
@@ -627,6 +660,92 @@ header{
     font-weight:900;
 }
 
+.api-settings-box{
+    max-height:85vh;
+    overflow-y:auto;
+}
+
+.api-service-block{
+    margin-top:12px;
+}
+
+.api-service-block:first-of-type{
+    margin-top:2px;
+}
+
+.api-service-title{
+    font-size:12px;
+    font-weight:900;
+    margin-bottom:6px;
+}
+
+.api-service-title span{
+    color:#687386;
+    font-weight:400;
+    font-size:10px;
+}
+
+.api-key-input-row{
+    display:flex;
+    gap:5px;
+}
+
+.api-key-input-row .apply-btn{
+    padding:0 14px;
+}
+
+.api-key-list{
+    margin-top:7px;
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+}
+
+.api-key-item{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+    background:#0b0f15;
+    border:1px solid #1e2530;
+    border-radius:7px;
+    padding:7px 8px;
+}
+
+.api-key-info{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+    min-width:0;
+}
+
+.api-key-value{
+    font-size:11px;
+    font-weight:700;
+    font-family:monospace;
+}
+
+.api-key-status{
+    font-size:8px;
+    color:#8993a5;
+}
+
+.api-key-remove{
+    border:0;
+    background:none;
+    color:#ff536d;
+    cursor:pointer;
+    font-size:13px;
+    flex:0 0 auto;
+}
+
+.api-settings-note{
+    margin-top:12px;
+    color:#687386;
+    font-size:9px;
+    line-height:1.4;
+}
+
 
 /* =========================================================
    MOBILE
@@ -706,6 +825,22 @@ class="page active"
 id="mainPage">
 
 <div class="main-page">
+
+<div class="api-settings-bar">
+
+<button
+class="settings-btn"
+onclick="openApiSettingsModal()">
+⚙ Настройки API
+</button>
+
+<span
+class="api-status"
+id="apiStatusBadge">
+</span>
+
+</div>
+
 
 <div class="main-title">
 
@@ -906,6 +1041,98 @@ onclick="addMonitor()">
 </div>
 
 
+<div
+class="modal"
+id="apiSettingsModal">
+
+<div class="modal-box api-settings-box">
+
+<div class="modal-title">
+⚙ Настройки API
+</div>
+
+<div class="api-service-block">
+
+<div class="api-service-title">
+Finnhub <span>· форекс, реалтайм</span>
+</div>
+
+<div class="api-key-input-row">
+
+<input
+class="modal-input"
+id="finnhubKeyInput"
+placeholder="Вставьте API-ключ Finnhub"
+onkeydown="if(event.key==='Enter'){addApiKey('finnhub');}"
+>
+
+<button
+class="apply-btn"
+onclick="addApiKey('finnhub')">
++
+</button>
+
+</div>
+
+<div
+class="api-key-list"
+id="finnhubKeyList">
+</div>
+
+</div>
+
+
+<div class="api-service-block">
+
+<div class="api-service-title">
+Twelve Data <span>· форекс, свечи</span>
+</div>
+
+<div class="api-key-input-row">
+
+<input
+class="modal-input"
+id="twelvedataKeyInput"
+placeholder="Вставьте API-ключ Twelve Data"
+onkeydown="if(event.key==='Enter'){addApiKey('twelvedata');}"
+>
+
+<button
+class="apply-btn"
+onclick="addApiKey('twelvedata')">
++
+</button>
+
+</div>
+
+<div
+class="api-key-list"
+id="twelvedataKeyList">
+</div>
+
+</div>
+
+
+<div class="api-settings-note">
+Ключи хранятся только в этом браузере. При сбое текущий
+ключ автоматически заменяется следующим по кругу, а через
+5 минут пробуется снова.
+</div>
+
+
+<div class="modal-actions">
+
+<button onclick="closeApiSettingsModal()">
+Закрыть
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
 <script>
 
 /* =========================================================
@@ -994,6 +1221,511 @@ const MONITOR_INTERVAL = 5000;
    одного и того же сигнала.
 */
 const SAME_SIGNAL_BLOCK = true;
+
+
+/* =========================================================
+   API KEYS — ХРАНЕНИЕ И РОТАЦИЯ
+
+   Ключи Finnhub и Twelve Data больше не зашиты в код —
+   хранятся в localStorage и управляются через модалку
+   "Настройки API". Если ключ перестаёт работать (лимит,
+   отозван, любая ошибка запроса) — он молча помечается
+   "слетевшим", и работа продолжается со следующим активным
+   ключом по кругу. Через API_KEY_RETRY_MS слетевший ключ
+   снова становится активным (на случай если лимит уже
+   сбросился).
+========================================================= */
+
+const API_KEY_RETRY_MS = 5 * 60 * 1000;
+
+const API_KEY_STORAGE_KEY = "cryptoScreenApiKeys";
+
+
+function loadApiKeyStore(){
+
+const raw =
+localStorage.getItem(API_KEY_STORAGE_KEY);
+
+let parsed = null;
+
+try{
+parsed = raw ? JSON.parse(raw) : null;
+}catch(e){
+parsed = null;
+}
+
+const empty = () => ({keys:[], currentId:null});
+
+return{
+finnhub: (parsed && parsed.finnhub) || empty(),
+twelvedata: (parsed && parsed.twelvedata) || empty()
+};
+
+}
+
+
+const apiKeyStore = loadApiKeyStore();
+
+
+function persistApiKeyStore(){
+
+localStorage.setItem(
+API_KEY_STORAGE_KEY,
+JSON.stringify(apiKeyStore)
+);
+
+}
+
+
+function makeKeyId(){
+
+return(
+Date.now().toString(36)+
+Math.random().toString(36).slice(2,8)
+);
+
+}
+
+
+function maskApiKey(value){
+
+if(value.length<=8)
+return "••••"+value.slice(-2);
+
+return(
+value.slice(0,4)+
+"••••"+
+value.slice(-4)
+);
+
+}
+
+
+function recoverExpiredKeys(service){
+
+const state=
+apiKeyStore[service];
+
+const now=
+Date.now();
+
+let recovered=false;
+
+state.keys.forEach(k=>{
+
+if(
+k.status==="failed" &&
+now-k.failedAt>=API_KEY_RETRY_MS
+){
+
+k.status="active";
+k.failedAt=null;
+recovered=true;
+
+}
+
+});
+
+if(recovered)
+persistApiKeyStore();
+
+return recovered;
+
+}
+
+
+function getCurrentApiKey(service){
+
+recoverExpiredKeys(service);
+
+const state=
+apiKeyStore[service];
+
+let current=
+state.keys.find(k=>k.id===state.currentId);
+
+if(!current || current.status!=="active"){
+
+current=
+state.keys.find(k=>k.status==="active") || null;
+
+state.currentId=
+current ? current.id : null;
+
+}
+
+return current;
+
+}
+
+
+function markApiKeyFailed(service,keyId){
+
+const state=
+apiKeyStore[service];
+
+const failedIdx=
+state.keys.findIndex(k=>k.id===keyId);
+
+if(failedIdx===-1)
+return;
+
+state.keys[failedIdx].status="failed";
+state.keys[failedIdx].failedAt=Date.now();
+
+let nextIdx=(failedIdx+1)%state.keys.length;
+let found=null;
+
+for(
+let i=0;
+i<state.keys.length;
+i++
+){
+
+if(state.keys[nextIdx].status==="active"){
+found=state.keys[nextIdx];
+break;
+}
+
+nextIdx=(nextIdx+1)%state.keys.length;
+
+}
+
+state.currentId=
+found ? found.id : null;
+
+persistApiKeyStore();
+
+renderApiKeyList(service);
+
+updateApiStatusBadge();
+
+}
+
+
+async function callFinnhubApi(requestFn){
+
+const state=
+apiKeyStore.finnhub;
+
+const attempts=
+Math.max(1,state.keys.length);
+
+let lastError;
+
+for(let i=0;i<attempts;i++){
+
+const key=
+getCurrentApiKey("finnhub");
+
+if(!key){
+
+throw new Error(
+"Нет активных API-ключей Finnhub. Добавьте ключ в настройках API."
+);
+
+}
+
+try{
+
+return await requestFn(key.value);
+
+}catch(e){
+
+lastError=e;
+
+markApiKeyFailed("finnhub",key.id);
+
+}
+
+}
+
+throw lastError || new Error("Finnhub недоступен");
+
+}
+
+
+async function callTwelveDataApi(requestFn){
+
+const state=
+apiKeyStore.twelvedata;
+
+const attempts=
+Math.max(1,state.keys.length);
+
+let lastError;
+
+for(let i=0;i<attempts;i++){
+
+const key=
+getCurrentApiKey("twelvedata");
+
+if(!key){
+
+throw new Error(
+"Нет активных API-ключей Twelve Data. Добавьте ключ в настройках API."
+);
+
+}
+
+try{
+
+return await requestFn(key.value);
+
+}catch(e){
+
+lastError=e;
+
+markApiKeyFailed("twelvedata",key.id);
+
+}
+
+}
+
+throw lastError || new Error("Twelve Data недоступен");
+
+}
+
+
+function addApiKey(service){
+
+const input=
+document.getElementById(service+"KeyInput");
+
+if(!input)
+return;
+
+const value=
+(input.value||"").trim();
+
+if(!value)
+return;
+
+const state=
+apiKeyStore[service];
+
+if(state.keys.some(k=>k.value===value)){
+
+input.value="";
+return;
+
+}
+
+const key={
+id:makeKeyId(),
+value,
+status:"active",
+failedAt:null
+};
+
+state.keys.push(key);
+
+if(!state.currentId)
+state.currentId=key.id;
+
+input.value="";
+
+persistApiKeyStore();
+
+renderApiKeyList(service);
+
+updateApiStatusBadge();
+
+if(service==="finnhub")
+connectFinnhub();
+
+}
+
+
+function removeApiKey(service,keyId){
+
+const state=
+apiKeyStore[service];
+
+state.keys=
+state.keys.filter(k=>k.id!==keyId);
+
+if(state.currentId===keyId){
+
+const next=
+state.keys.find(k=>k.status==="active");
+
+state.currentId=
+next ? next.id : null;
+
+}
+
+persistApiKeyStore();
+
+renderApiKeyList(service);
+
+updateApiStatusBadge();
+
+if(service==="finnhub")
+connectFinnhub();
+
+}
+
+
+function renderApiKeyList(service){
+
+const list=
+document.getElementById(service+"KeyList");
+
+if(!list)
+return;
+
+recoverExpiredKeys(service);
+
+const state=
+apiKeyStore[service];
+
+if(!state.keys.length){
+
+list.innerHTML=
+`<div class="empty">Нет добавленных ключей</div>`;
+
+return;
+
+}
+
+list.innerHTML=
+state.keys.map(k=>{
+
+const isCurrent=
+k.id===state.currentId &&
+k.status==="active";
+
+let statusText;
+
+if(isCurrent){
+
+statusText="🟢 Активен";
+
+}else if(k.status==="active"){
+
+statusText="🔵 Резерв";
+
+}else{
+
+const leftMs=
+Math.max(
+0,
+API_KEY_RETRY_MS-(Date.now()-k.failedAt)
+);
+
+statusText=
+"🔴 Слетел ("+
+Math.ceil(leftMs/60000)+
+"м до повтора)";
+
+}
+
+return `
+<div class="api-key-item">
+<div class="api-key-info">
+<span class="api-key-value">${maskApiKey(k.value)}</span>
+<span class="api-key-status">${statusText}</span>
+</div>
+<button class="api-key-remove" onclick="removeApiKey('${service}','${k.id}')">✕</button>
+</div>
+`;
+
+}).join("");
+
+}
+
+
+function updateApiStatusBadge(){
+
+const badge=
+document.getElementById("apiStatusBadge");
+
+if(!badge)
+return;
+
+const fh=
+apiKeyStore.finnhub.keys.filter(
+k=>k.status==="active"
+).length;
+
+const td=
+apiKeyStore.twelvedata.keys.filter(
+k=>k.status==="active"
+).length;
+
+const warn=
+fh===0 || td===0;
+
+badge.className=
+"api-status"+(warn?" api-status-warn":"");
+
+badge.textContent=
+warn
+?"⚠ Проверьте ключи API"
+:"🔑 Finnhub: "+fh+" • Twelve Data: "+td;
+
+}
+
+
+function openApiSettingsModal(){
+
+renderApiKeyList("finnhub");
+renderApiKeyList("twelvedata");
+
+document
+.getElementById("apiSettingsModal")
+.classList.add("open");
+
+}
+
+
+function closeApiSettingsModal(){
+
+document
+.getElementById("apiSettingsModal")
+.classList.remove("open");
+
+}
+
+
+/*
+   Раз в 30 секунд проверяем, не "ожили" ли
+   слетевшие ключи (вдруг лимит уже сбросился),
+   и если Finnhub был полностью недоступен —
+   пробуем переподключиться на восстановленном ключе.
+*/
+
+setInterval(()=>{
+
+const fhRecovered=
+recoverExpiredKeys("finnhub");
+
+recoverExpiredKeys("twelvedata");
+
+updateApiStatusBadge();
+
+const modal=
+document.getElementById("apiSettingsModal");
+
+if(modal && modal.classList.contains("open")){
+
+renderApiKeyList("finnhub");
+renderApiKeyList("twelvedata");
+
+}
+
+if(
+fhRecovered &&
+getCurrentApiKey("finnhub") &&
+(!finnhubSocket || finnhubSocket.readyState!==WebSocket.OPEN)
+){
+
+connectFinnhub();
+
+}
+
+},30000);
 
 
 /* =========================================================
@@ -1687,16 +2419,9 @@ return price;
    в минуту, гораздо щедрее Twelve Data).
 ========================================================= */
 
-const FINNHUB_API_KEY =
-"d9ujk9pr01qs9cmd3oogd9ujk9pr01qs9cmd3op0";
-
-
 function finnhubReady(){
 
-return (
-FINNHUB_API_KEY &&
-!FINNHUB_API_KEY.includes("PASTE_YOUR")
-);
+return !!getCurrentApiKey("finnhub");
 
 }
 
@@ -1787,8 +2512,23 @@ return [...new Set([
 
 function connectFinnhub(){
 
-if(!finnhubReady())
+const activeKey=
+getCurrentApiKey("finnhub");
+
+if(!activeKey){
+
+updateApiStatusBadge();
+
 return;
+
+}
+
+if(finnhubReconnectTimer){
+
+clearTimeout(finnhubReconnectTimer);
+finnhubReconnectTimer=null;
+
+}
 
 if(finnhubSocket){
 
@@ -1802,10 +2542,19 @@ finnhubSocket=null;
 
 finnhubSubscribed.clear();
 
+const usedKeyId=
+activeKey.id;
+
+const openedAt=
+Date.now();
+
+let gotMessage=
+false;
+
 finnhubSocket=
 new WebSocket(
 "wss://ws.finnhub.io?token="+
-encodeURIComponent(FINNHUB_API_KEY)
+encodeURIComponent(activeKey.value)
 );
 
 
@@ -1817,6 +2566,8 @@ refreshFinnhubSubscriptions();
 
 
 finnhubSocket.onmessage=event=>{
+
+gotMessage=true;
 
 try{
 
@@ -1892,11 +2643,37 @@ finnhubSocket.onclose=()=>{
 if(finnhubReconnectTimer)
 clearTimeout(finnhubReconnectTimer);
 
+const aliveMs=
+Date.now()-openedAt;
+
+/*
+   Сокет закрылся почти сразу и не прислал
+   ни одного тика — похоже на нерабочий ключ.
+   Помечаем его слетевшим и пробуем следующий.
+*/
+
+if(!gotMessage && aliveMs<5000){
+
+markApiKeyFailed(
+"finnhub",
+usedKeyId
+);
+
+finnhubReconnectTimer=
+setTimeout(
+connectFinnhub,
+800
+);
+
+}else{
+
 finnhubReconnectTimer=
 setTimeout(
 connectFinnhub,
 3000
 );
+
+}
 
 };
 
@@ -1978,13 +2755,7 @@ getLiveForexPrice(symbol);
 if(live!==null)
 return live;
 
-if(!finnhubReady()){
-
-throw new Error(
-"Не указан API-ключ Finnhub"
-);
-
-}
+return callFinnhubApi(async(apiKey)=>{
 
 const url=
 "https://finnhub.io/api/v1/quote"+
@@ -1993,7 +2764,7 @@ encodeURIComponent(
 toFinnhubSymbol(symbol)
 )+
 "&token="+
-encodeURIComponent(FINNHUB_API_KEY);
+encodeURIComponent(apiKey);
 
 const response=
 await fetchWithRetry(url);
@@ -2013,6 +2784,8 @@ throw new Error(
 }
 
 return price;
+
+});
 
 }
 
@@ -2061,9 +2834,6 @@ trade.current=price;
    интервалом между вызовами — независимо от того, сколько
    мониторов/карточек одновременно просят данные.
 ========================================================= */
-
-const TWELVE_DATA_API_KEY =
-"c41ad6d74c4d4c22ac1a20312e9246a7";
 
 const TWELVE_DATA_MIN_GAP = 8000;
 
@@ -2134,7 +2904,9 @@ interval
 ){
 
 return scheduleTwelveDataCall(
-async ()=>{
+async ()=>
+
+callTwelveDataApi(async(apiKey)=>{
 
 const pair=
 normalizeForex(symbol);
@@ -2148,7 +2920,7 @@ twelveInterval(interval)+
 "&outputsize="+
 ANALYSIS_CANDLES+
 "&apikey="+
-encodeURIComponent(TWELVE_DATA_API_KEY);
+encodeURIComponent(apiKey);
 
 const response=
 await fetchWithRetry(url);
@@ -2188,7 +2960,8 @@ v.volume
 
 }));
 
-}
+})
+
 );
 
 }
@@ -5411,6 +6184,9 @@ monitorBusy=false;
 /* =========================================================
    START
 ========================================================= */
+
+updateApiStatusBadge();
+
 
 createCards();
 
