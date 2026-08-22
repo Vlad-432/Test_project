@@ -4,7 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 
-<title>CryptoScreen Hybrid</title>
+<title>CryptoScr</title>
+
+<meta name="application-name" content="CryptoScr">
+<meta name="apple-mobile-web-app-title" content="CryptoScr">
 
 <style>
 *{box-sizing:border-box}
@@ -22,12 +25,14 @@ html,body{
 button,input{font:inherit}
 
 header{
-    height:58px;
-    padding:10px 14px;
+    height:64px;
+    padding:6px 12px 8px;
     background:rgba(8,11,16,.97);
     border-bottom:1px solid #202631;
     display:flex;
-    align-items:center;
+    flex-direction:column;
+    justify-content:center;
+    gap:6px;
     position:relative;
     z-index:20;
 }
@@ -41,8 +46,26 @@ header{
 }
 
 .logo{
-    font-size:21px;
+    font-size:13px;
     font-weight:900;
+    letter-spacing:.3px;
+    opacity:0;
+    animation:logoIntro .6s ease forwards;
+}
+
+@keyframes logoIntro{
+    0%{
+        opacity:0;
+        transform:scale(.55) translateY(-4px);
+    }
+    60%{
+        opacity:1;
+        transform:scale(1.12);
+    }
+    100%{
+        opacity:1;
+        transform:scale(1);
+    }
 }
 
 .logo span{color:#00d68f}
@@ -51,6 +74,17 @@ header{
     display:flex;
     align-items:center;
     gap:8px;
+}
+
+.header-nav{
+    width:100%;
+    display:flex;
+    gap:6px;
+}
+
+.header-nav .nav-btn{
+    flex:1 1 0;
+    text-align:center;
 }
 
 .connection{
@@ -76,7 +110,7 @@ header{
 
 .app{
     width:100%;
-    height:calc(100vh - 58px);
+    height:calc(100vh - 64px);
     overflow:hidden;
 }
 
@@ -789,14 +823,16 @@ header{
 <div class="header-inner">
 
 <div class="logo">
-Crypto<span>Screen</span>
+Crypto<span>Scr</span>
 </div>
-
-<div class="header-right">
 
 <div class="connection" id="connection">
 ● Подключение...
 </div>
+
+</div>
+
+<div class="header-nav">
 
 <button
 class="nav-btn active"
@@ -812,7 +848,6 @@ onclick="showPage('signals')">
 Сигналы
 </button>
 
-</div>
 </div>
 
 </header>
@@ -4163,6 +4198,231 @@ factors
 
 
 /* =========================================================
+   МУЛЬТИТАЙМФРЕЙМ-АНАЛИЗ ДЛЯ СДЕЛОК (только вкладка "Сигналы")
+
+   Используется ИСКЛЮЧИТЕЛЬНО в мониторах, которые реально
+   открывают сделки. Карточки на главной ("Графики") по-прежнему
+   считают сигнал через обычный calculateSignal() на одном ТФ —
+   их эта логика не касается.
+
+   При мелком базовом ТФ (M1 или M5) сигнал дополнительно
+   сверяется со старшими ТФ (например M5+M15 для базового M1,
+   M15+M30 для базового M5). Если старшие ТФ согласны с
+   направлением — сделка держится дольше (до 15 минут), если
+   согласен только один из двух — держится ближе к базовому
+   ТФ, если оба против — сделка не открывается вовсе.
+========================================================= */
+
+const mtfCandleCache = {};
+
+const MTF_CANDLE_REFRESH = 60000;
+
+
+function nextTimeframes(baseInterval){
+
+const steps=
+["1","5","15","30","60","240","D"];
+
+const idx=
+steps.indexOf(baseInterval);
+
+if(idx===-1)
+return null;
+
+const mid=
+steps[Math.min(idx+1,steps.length-1)];
+
+const high=
+steps[Math.min(idx+2,steps.length-1)];
+
+if(mid===baseInterval)
+return null;
+
+return{mid,high};
+
+}
+
+
+async function getCachedMtfKlines(monitor,interval){
+
+const key=
+monitor.id+"_"+interval;
+
+const cached=
+mtfCandleCache[key];
+
+if(
+cached &&
+Date.now()-cached.time<MTF_CANDLE_REFRESH
+){
+
+return cached.candles;
+
+}
+
+const candles=
+monitor.type==="forex"
+?await getForexKlines(monitor.symbol,interval)
+:await getCryptoKlines(monitor.symbol,interval);
+
+mtfCandleCache[key]={
+candles,
+time:Date.now()
+};
+
+return candles;
+
+}
+
+
+async function calculateTradeSignal(monitor,baseCandles){
+
+const baseResult=
+calculateSignal(baseCandles);
+
+const baseMinutes=
+timeframeMinutes(monitor.interval);
+
+const fallback={
+...baseResult,
+duration:
+baseMinutes*60*1000
+};
+
+const isSmallTF=
+monitor.interval==="1" ||
+monitor.interval==="5";
+
+if(
+!isSmallTF ||
+baseResult.signal==="WAIT"
+){
+
+return fallback;
+
+}
+
+const tfs=
+nextTimeframes(monitor.interval);
+
+if(!tfs)
+return fallback;
+
+let midCandles,highCandles;
+
+try{
+
+midCandles=
+await getCachedMtfKlines(
+monitor,tfs.mid
+);
+
+highCandles=
+await getCachedMtfKlines(
+monitor,tfs.high
+);
+
+}catch(e){
+
+/*
+   Не удалось получить старшие ТФ —
+   работаем по базовому сигналу
+   с минимальной длительностью,
+   а не блокируем сделку целиком.
+*/
+
+return fallback;
+
+}
+
+const midResult=
+calculateSignal(midCandles);
+
+const highResult=
+calculateSignal(highCandles);
+
+const direction=
+baseResult.signal;
+
+const midAgrees=
+direction==="BUY"
+?midResult.score>50
+:midResult.score<50;
+
+const highAgrees=
+direction==="BUY"
+?highResult.score>50
+:highResult.score<50;
+
+const agreeCount=
+(midAgrees?1:0)+
+(highAgrees?1:0);
+
+
+if(agreeCount===0){
+
+return{
+...baseResult,
+signal:"WAIT",
+duration:0,
+info:
+baseResult.info+
+` • отменено: ${tfs.mid}м и ${tfs.high}м против`
+};
+
+}
+
+
+let durationMinutes;
+
+if(agreeCount===1){
+
+durationMinutes=
+Math.max(baseMinutes,5);
+
+}else{
+
+const avgStrength=
+(
+Math.abs(midResult.score-50)+
+Math.abs(highResult.score-50)
+)/2;
+
+const extra=
+Math.min(
+5,
+Math.max(0,(avgStrength-25)/25*5)
+);
+
+durationMinutes=
+10+extra;
+
+}
+
+durationMinutes=
+Math.min(
+15,
+Math.max(baseMinutes,durationMinutes)
+);
+
+
+return{
+
+...baseResult,
+
+duration:
+Math.round(durationMinutes)*60*1000,
+
+info:
+baseResult.info+
+` • MTF ${tfs.mid}м/${tfs.high}м: ${agreeCount}/2 согласны (${Math.round(durationMinutes)} мин)`
+
+};
+
+}
+
+
+/* =========================================================
    SHOW SIGNAL
 ========================================================= */
 
@@ -5341,7 +5601,10 @@ livePrice=live;
 
 
 const result=
-calculateSignal(candles);
+await calculateTradeSignal(
+monitor,
+candles
+);
 
 
 /*
