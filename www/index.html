@@ -110,7 +110,7 @@ header{
 
 .app{
     width:100%;
-    height:calc(100vh - 64px);
+    height:calc(var(--app-vh,100vh) - 64px);
     overflow:hidden;
 }
 
@@ -180,9 +180,12 @@ header{
 
 .cards-grid{
     height:calc(100% - 42px);
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
     display:grid;
     grid-template-columns:repeat(2,minmax(0,1fr));
     gap:10px;
+    align-content:start;
 }
 
 .card{
@@ -6442,6 +6445,81 @@ monitorBusy=false;
 }
 
 }
+
+
+/* =========================================================
+   ПОДСТРОЙКА ПОД КЛАВИАТУРУ
+
+   html/body/.app сделаны с overflow:hidden, поэтому браузер
+   не может сам проскроллить страницу к полю ввода, когда
+   выезжает клавиатура — поле просто остаётся под ней.
+   Тут вручную: (1) подгоняем высоту .app под реально видимую
+   область (без клавиатуры) через visualViewport, (2) при
+   фокусе на любое поле — доскролливаем его в видимую зону.
+========================================================= */
+
+function setupKeyboardFix(){
+
+if(!window.visualViewport)
+return;
+
+const root=
+document.documentElement;
+
+function applyViewportHeight(){
+
+root.style.setProperty(
+"--app-vh",
+window.visualViewport.height+"px"
+);
+
+}
+
+window.visualViewport.addEventListener(
+"resize",
+applyViewportHeight
+);
+
+window.visualViewport.addEventListener(
+"scroll",
+applyViewportHeight
+);
+
+applyViewportHeight();
+
+}
+
+
+function setupInputScrollFix(){
+
+document.addEventListener(
+"focusin",
+e=>{
+
+const tag=
+e.target.tagName;
+
+if(tag!=="INPUT" && tag!=="TEXTAREA")
+return;
+
+setTimeout(()=>{
+
+e.target.scrollIntoView({
+block:"center",
+behavior:"smooth"
+});
+
+},250);
+
+}
+
+);
+
+}
+
+
+setupKeyboardFix();
+setupInputScrollFix();
 
 
 /* =========================================================
