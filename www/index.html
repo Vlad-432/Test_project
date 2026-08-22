@@ -194,9 +194,17 @@ header{
     background:#10141b;
     border:1px solid #232a35;
     border-radius:14px;
-    overflow:hidden;
     display:flex;
     flex-direction:column;
+}
+
+.card-sticky-top{
+    position:sticky;
+    top:0;
+    z-index:6;
+    background:#10141b;
+    border-top-left-radius:14px;
+    border-top-right-radius:14px;
 }
 
 .card-top{
@@ -412,6 +420,8 @@ header{
     background:#0b0e13;
     overflow:hidden;
     position:relative;
+    border-bottom-left-radius:14px;
+    border-bottom-right-radius:14px;
 }
 
 .chart > div{
@@ -1982,6 +1992,8 @@ card.className="card";
 
 card.innerHTML=`
 
+<div class="card-sticky-top">
+
 <div class="card-top">
 
 <div class="coin-row">
@@ -2074,6 +2086,8 @@ id="volume-${index}">
 
 </div>
 
+</div>
+
 
 <div class="controls">
 
@@ -2090,6 +2104,8 @@ class="apply-btn"
 onclick="changePair(${index})">
 OK
 </button>
+
+</div>
 
 </div>
 
@@ -4705,7 +4721,7 @@ hide_top_toolbar:true,
 
 hide_side_toolbar:true,
 
-hide_legend:false,
+hide_legend:true,
 
 save_image:false,
 
@@ -6462,11 +6478,38 @@ monitorBusy=false;
 
 function setupKeyboardFix(){
 
-if(!window.visualViewport)
-return;
-
 const root=
 document.documentElement;
+
+function scrollActiveIntoView(){
+
+const active=
+document.activeElement;
+
+if(
+!active ||
+(active.tagName!=="INPUT" &&
+active.tagName!=="TEXTAREA")
+)
+return;
+
+active.scrollIntoView({
+block:"center",
+behavior:"smooth"
+});
+
+}
+
+
+if(window.visualViewport){
+
+/*
+   Событие resize у visualViewport срабатывает,
+   когда клавиатура УЖЕ полностью открылась/закрылась
+   и известна её реальная высота — в отличие от
+   фиксированной задержки, тут не приходится гадать
+   с таймингом, поэтому скролл к полю не промахивается.
+*/
 
 function applyViewportHeight(){
 
@@ -6474,6 +6517,8 @@ root.style.setProperty(
 "--app-vh",
 window.visualViewport.height+"px"
 );
+
+scrollActiveIntoView();
 
 }
 
@@ -6489,10 +6534,12 @@ applyViewportHeight
 
 applyViewportHeight();
 
-}
+}else{
 
-
-function setupInputScrollFix(){
+/*
+   Резервный вариант для WebView без
+   поддержки visualViewport.
+*/
 
 document.addEventListener(
 "focusin",
@@ -6504,14 +6551,10 @@ e.target.tagName;
 if(tag!=="INPUT" && tag!=="TEXTAREA")
 return;
 
-setTimeout(()=>{
-
-e.target.scrollIntoView({
-block:"center",
-behavior:"smooth"
-});
-
-},250);
+setTimeout(
+scrollActiveIntoView,
+300
+);
 
 }
 
@@ -6519,9 +6562,10 @@ behavior:"smooth"
 
 }
 
+}
+
 
 setupKeyboardFix();
-setupInputScrollFix();
 
 
 /* =========================================================
